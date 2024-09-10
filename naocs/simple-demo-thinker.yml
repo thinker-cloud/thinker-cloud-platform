@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    dynamic:
+      druid:
+        initial-size: 100
+        min-idle: 100
+        maxActive: 100
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 40
+        filters: stat,slf4j
+      # 默认的数据源
+      primary: master
+      # 未匹配到数据源时，true抛异常，false使用默认数据源
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.8.203:3306/operator-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: root
+          password: Mysql@13a
+        # 从库数据源
+        slave:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.168.8.203:3306/operator-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: readonly
+          password: 123456!
+
+springdoc:
+  api-docs:
+    title: 演示项目
+    description: Thinker Cloud Platform 演示项目接口文档
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.example.demo.controller
+
+thinker:
+  cloud:
+    db:
+      # 数据库类型
+      type: mysql
+      # 开启租户隔离
+      tenant:
+        enable: true
+      # 开启数据权限
+      data-scope:
+        enable: true
+    redis:
+      # 开启延迟队列
+      delayQueue:
+        enabled: false

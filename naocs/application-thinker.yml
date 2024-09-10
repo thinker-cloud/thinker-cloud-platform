@@ -1,0 +1,77 @@
+spring:
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+      
+  # 接入 spring boot admin
+  boot:
+    admin:
+      client:
+        url: http://localhost:8000
+        username: admin
+        password: admin
+        instance:
+          service-host-type: ip
+  data:
+    redis:
+      #      host: localhost
+      #      port: 6379
+      #      password: root123
+      timeout: 3000ms
+      password: cluster13a
+      cluster:
+        # 获取失败 最大重定向次数
+        max-redirects: 3
+        nodes:
+          - 192.168.8.203:6981
+          - 192.168.8.203:6982
+          - 192.168.8.203:6983
+          - 192.168.8.203:6984
+          - 192.168.8.203:6985
+          - 192.168.8.203:6986
+      lettuce:
+        pool:
+          # 连接池最大连接数（使用负值表示没有限制）
+          max-active: 200
+          # 连接池中的最大空闲连接
+          max-idle: 50
+          #连接池中的最小空闲连接
+          min-idle: 20
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1
+
+# http://localhost:8088/swagger-ui/index.html#/
+springdoc:
+  api-docs:
+    # 开启api文档
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+  default-flat-param-object: false
+
+# 监控端点
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      # 显示健康的详细信息    
+      show-details: always
+    env:
+      # 默认Actuator的环境变量会以****显示，这里开启显示
+      show-values: always
+    configprops:
+      # 默认Actuator的配置属性会以****显示，这里开启显示
+      show-values: always

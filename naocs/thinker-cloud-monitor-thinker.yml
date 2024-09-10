@@ -1,0 +1,10 @@
+spring:
+  # admin 登录账号
+  security:
+    user:
+      name: admin
+      password: admin
+
+springdoc:
+  api-docs:
+    enabled: false

@@ -1,0 +1,52 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: thinker-gateway
+  profiles:
+    active: ${PROFILES_ACTIVE:thinker}
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 开启从注册中心动态创建路由的功能
+          enabled: true
+          # 使用小写服务名，默认是大写
+          lower-case-service-id: true
+      # 配置路由路径
+      routes:
+        # simple-demo 服务
+        - id: simple-demo
+          uri: lb://simple-demo
+          predicates:
+            - Path=/simple-demo/**
+          filters:
+            # 限流配置
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 100
+                redis-rate-limiter.burstCapacity: 200
+        # thinker-cloud-monitor 模块
+        - id: thinker-cloud-monitor
+          uri: lb://thinker-cloud-monitor
+          predicates:
+            - Path=/thinker-cloud-monitor/**
+
+knife4j:
+  gateway:
+    enabled: true
+    # 网关文档聚合方式：服务发现（自动聚合）
+    strategy: discover
+    discover:
+      # 配置开启服务发现
+      enabled: true
+      # 配置OpenAPI3规范
+      version: openapi3
+      # 排除监控服务
+      excluded-services: thinker-cloud-monitor
+    # 配置tag排序规则
+    tags-sorter: order
+    # 配置operation排序规则
+    operations-sorter: order
