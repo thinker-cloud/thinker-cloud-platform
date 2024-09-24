@@ -1,8 +1,8 @@
 server:
-  port: 8881
+  port: 8801
 
 spring:
   application:
-    name: thinker-monitor
+    name: thinker-upms
   profiles:
     active: ${PROFILES_ACTIVE:thinker}

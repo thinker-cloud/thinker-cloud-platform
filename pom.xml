@@ -33,6 +33,13 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.thinker.cloud</groupId>
+            <artifactId>thinker-cloud-core-starter</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>${project.name}</finalName>
         <resources>

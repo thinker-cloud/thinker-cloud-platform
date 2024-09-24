@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.thinker.cloud</groupId>
+		<artifactId>thinker-cloud-upms</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>thinker-upms-service</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>thinker-upms-service</name>
+	<packaging>jar</packaging>
+	<description>Thinker Cloud Upms Service</description>
+	<url>https://www.isexcuse.com</url>
+
+	<properties>
+		<java.version>17</java.version>
+		<project.build.encoding>UTF-8</project.build.encoding>
+
+		<thinker-upms-api.version>1.0.0-SNAPSHOT</thinker-upms-api.version>
+	</properties>
+
+	<dependencies>
+		<!-- 配置中心 -->
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-cloud-config</artifactId>
+		</dependency>
+
+		<!-- upms API -->
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-upms-api</artifactId>
+			<version>${thinker-upms-api.version}</version>
+		</dependency>
+
+		<!-- 启动中心 -->
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-cloud-starter</artifactId>
+		</dependency>
+
+		<!-- 多数据源 -->
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-cloud-dynamic-datasource-starter</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- 打包跳过 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

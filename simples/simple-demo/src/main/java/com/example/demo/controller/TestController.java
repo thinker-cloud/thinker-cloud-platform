@@ -40,7 +40,7 @@ public class TestController {
     @Operation(summary = "测试接口", description = "测试接口")
     public Result<SuperEntity> test(@RequestBody SuperEntity entity) {
         ThreadUtil.sleep(2000);
-        return Result.buildSuccess(entity);
+        return Result.success(entity);
     }
 
     @GetMapping(value = "test1")
@@ -59,20 +59,20 @@ public class TestController {
 
         String start = DateUtil.format(now, DatePattern.NORM_DATETIME_MS_PATTERN);
         map.forEach((key, value) -> System.out.println(StrUtil.format("pkId:{}, start:{}, end:{}", key, start, value)));
-        return Result.buildSuccess();
+        return Result.success();
     }
 
     @PostMapping(value = "setCache")
     @Operation(summary = "测试接口", description = "测试接口")
     public Result<Void> setCache(@RequestParam String key, @RequestBody SuperEntity entity) {
         fastRedisService.setCache(key, entity);
-        return Result.buildSuccess();
+        return Result.success();
     }
 
     @GetMapping(value = "getCache")
     @Operation(summary = "测试接口", description = "测试接口")
     public Result<SuperEntity> getCache(@RequestParam String key) {
         SuperEntity entity = fastRedisService.getCache(key);
-        return Result.buildSuccess(entity);
+        return Result.success(entity);
     }
 }

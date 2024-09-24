@@ -6,6 +6,7 @@ import com.thinker.cloud.core.model.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.MediaType;
@@ -23,8 +24,9 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Order(-1)
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
+public class ErrorExceptionHandler implements ErrorWebExceptionHandler {
 
     private final ObjectMapper objectMapper;
 
@@ -47,7 +49,7 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
             DataBufferFactory bufferFactory = response.bufferFactory();
             try {
                 log.debug("Error Spring Cloud Gateway : {} {}", exchange.getRequest().getPath(), ex.getMessage());
-                return bufferFactory.wrap(objectMapper.writeValueAsBytes(Result.buildFailure(ex.getMessage())));
+                return bufferFactory.wrap(objectMapper.writeValueAsBytes(Result.success(ex.getMessage())));
             } catch (JsonProcessingException e) {
                 log.error("Error writing response", ex);
                 return bufferFactory.wrap(new byte[0]);
