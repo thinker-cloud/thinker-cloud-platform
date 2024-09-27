@@ -1,8 +1,8 @@
 server:
-  port: 8802
+  port: 8801
 
 spring:
   application:
-    name: thinker-upms
+    name: thinker-auth
   profiles:
     active: ${PROFILES_ACTIVE:thinker}

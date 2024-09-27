@@ -24,7 +24,7 @@ import java.util.List;
 @Tag(name = "SysUserController", description = "用户信息")
 @RestController
 @AllArgsConstructor
-@RequestMapping("sys-user")
+@RequestMapping("sys/user")
 public class SysUserController {
 
     private final ISysUserService sysUserService;

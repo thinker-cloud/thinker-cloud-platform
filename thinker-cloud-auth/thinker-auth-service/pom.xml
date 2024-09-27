@@ -4,29 +4,29 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.thinker.cloud</groupId>
-		<artifactId>thinker-cloud-upms</artifactId>
+		<artifactId>thinker-cloud-auth</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>thinker-upms-service</artifactId>
+	<artifactId>thinker-auth-service</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>thinker-upms-service</name>
+	<name>thinker-auth-service</name>
 	<packaging>jar</packaging>
-	<description>Thinker Cloud Upms Service</description>
+	<description>Thinker Cloud Auth 权限中心</description>
 	<url>https://www.isexcuse.com</url>
 
 	<properties>
 		<java.version>17</java.version>
 		<project.build.encoding>UTF-8</project.build.encoding>
 
-		<thinker-upms-api.version>1.0.0-SNAPSHOT</thinker-upms-api.version>
+		<thinker-auth-api.version>1.0.0-SNAPSHOT</thinker-auth-api.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.thinker.cloud</groupId>
-			<artifactId>thinker-upms-api</artifactId>
-			<version>${thinker-upms-api.version}</version>
+			<artifactId>thinker-auth-api</artifactId>
+			<version>${thinker-auth-api.version}</version>
 		</dependency>
 
 		<!-- 配置中心 -->
@@ -41,6 +41,12 @@
 			<artifactId>thinker-cloud-starter</artifactId>
 		</dependency>
 
+		<!-- 安全配置 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 		<!-- 多数据源 -->
 		<dependency>
 			<groupId>com.thinker.cloud</groupId>
@@ -48,21 +54,4 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<!-- 打包跳过 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

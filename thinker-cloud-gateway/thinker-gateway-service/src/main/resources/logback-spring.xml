@@ -1,71 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="false">
-    <!-- 属性设置 -->
-    <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue=""/>
-    <property name="log.path" value="logs/${spring.application.name}"/>
-    <!-- 彩色日志格式 -->
-    <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-    <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex"
-                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx"
-                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+	<!-- 属性设置 -->
+	<springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue=""/>
+	<property name="log.path" value="logs/${spring.application.name}"/>
+	<!-- 彩色日志格式 -->
+	<property name="CONSOLE_LOG_PATTERN"
+			  value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+	<!-- 彩色日志依赖的渲染类 -->
+	<conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+	<conversionRule conversionWord="wex"
+					converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+	<conversionRule conversionWord="wEx"
+					converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
-    <!-- Console log output -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
+	<!-- Console log output -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
 
-    <!-- Log file debug output -->
-    <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/debug.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/%d{yyyy-MM, aux}/debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
-        </encoder>
-    </appender>
+	<!-- Log file debug output -->
+	<appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.path}/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.path}/%d{yyyy-MM, aux}/debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <!-- Log file error output -->
-    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/error.log</file>
-        <!--日志过滤器：此日志文件只记录ERROR级别的-->
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
-        </encoder>
-    </appender>
+	<!-- Log file error output -->
+	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.path}/error.log</file>
+		<!--日志过滤器：此日志文件只记录ERROR级别的-->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.path}/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <root level="INFO">
-        <appender-ref ref="debug"/>
-        <appender-ref ref="error"/>
-        <appender-ref ref="console"/>
-    </root>
+	<root level="DEBUG">
+		<appender-ref ref="debug"/>
+		<appender-ref ref="error"/>
+		<appender-ref ref="console"/>
+	</root>
 
-    <!--数据库日志-->
-    <!--由于这个logger自动继承了root的appender，root中已经有stdout的appender了，自己这边又引入了stdout的appender-->
-    <!--如果没有设置 additivity="false" ,就会导致一条日志在控制台输出两次的情况-->
-    <!--additivity表示要不要使用rootLogger配置的appender进行输出-->
-    <logger name="org.apache" level="ERROR" additivity="false">
-        <appender-ref ref="error"/>
-    </logger>
+	<!--数据库日志-->
+	<!--由于这个logger自动继承了root的appender，root中已经有stdout的appender了，自己这边又引入了stdout的appender-->
+	<!--如果没有设置 additivity="false" ,就会导致一条日志在控制台输出两次的情况-->
+	<!--additivity表示要不要使用rootLogger配置的appender进行输出-->
+	<logger name="org.apache" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
 
-    <!-- 关闭指定类的日志输出 -->
-    <logger name="com.alibaba.nacos" level="OFF">
-        <appender-ref ref="error"/>
-    </logger>
+	<!-- 关闭指定类的日志输出 -->
+	<logger name="org.xnio.nio" level="OFF"/>
+	<logger name="druid.sql.Connection" level="OFF"/>
+	<logger name="org.mybatis.spring.mapper.ClassPathMapperScanner" level="OFF"/>
+	<logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="OFF"/>
+	<logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner" level="OFF"/>
+	<logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger" level="OFF"/>
+
+	<!--屏蔽外部依赖日志输出级别-->
+	<logger name="io.netty" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="reactor.netty" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.apache" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="com.netflix" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.redisson" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="com.alibaba" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="de.codecentric" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="io.swagger.v3" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="io.lettuce.core" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.hibernate.validator" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.springframework.web" level="TRACE" additivity="false">
+		<appender-ref ref="debug"/>
+	</logger>
+	<logger name="org.springframework.data.convert" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.springframework.web.HttpLogging" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="springfox.documentation" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
 </configuration>

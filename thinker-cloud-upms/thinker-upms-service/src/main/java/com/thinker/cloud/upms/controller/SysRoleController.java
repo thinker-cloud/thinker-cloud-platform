@@ -26,7 +26,7 @@ import java.util.List;
 @Tag(name = "SysRoleController", description = "角色管理")
 @RestController
 @AllArgsConstructor
-@RequestMapping("sys-role")
+@RequestMapping("sys/role")
 public class SysRoleController {
 
     private final ISysRoleService sysRoleService;

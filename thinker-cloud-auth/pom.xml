@@ -4,15 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.thinker.cloud</groupId>
-		<artifactId>thinker-cloud-upms</artifactId>
+		<artifactId>thinker-cloud-platform</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>thinker-upms-api</artifactId>
+	<artifactId>thinker-cloud-auth</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>thinker-upms-api</name>
-	<packaging>jar</packaging>
-	<description>Thinker Cloud Upms Api</description>
+	<name>thinker-cloud-auth</name>
+	<packaging>pom</packaging>
+	<description>Thinker Cloud Auth</description>
 	<url>https://www.isexcuse.com</url>
 
 	<properties>
@@ -20,8 +20,8 @@
 		<project.build.encoding>UTF-8</project.build.encoding>
 	</properties>
 
-	<dependencies>
-
-	</dependencies>
-
+	<modules>
+		<module>thinker-auth-api</module>
+		<module>thinker-auth-service</module>
+	</modules>
 </project>
