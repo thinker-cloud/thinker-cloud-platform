@@ -2,20 +2,20 @@ package com.thinker.cloud.upms.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.thinker.cloud.upms.api.sys.model.dto.SysRoleDTO;
-import com.thinker.cloud.upms.api.sys.model.query.SysRoleQuery;
-import com.thinker.cloud.upms.api.sys.model.vo.SysRoleVO;
-import com.thinker.cloud.upms.model.entity.SysRole;
+import com.thinker.cloud.upms.api.sys.model.dto.SysOrganizationDTO;
+import com.thinker.cloud.upms.api.sys.model.query.SysOrganizationQuery;
+import com.thinker.cloud.upms.api.sys.model.vo.SysOrganizationVO;
+import com.thinker.cloud.upms.model.entity.SysOrganization;
 
 import java.util.List;
 
 /**
- * 角色管理 服务类
+ * 组织架构 服务类
  *
  * @author admin
- * @since 2024-09-23 11:39:09
+ * @since 2024-09-27 17:44:19
  */
-public interface ISysRoleService extends IService<SysRole> {
+public interface ISysOrganizationService extends IService<SysOrganization> {
 
     /**
      * 根据query分页查询
@@ -24,7 +24,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param query 查询条件
      * @return 数据列表
      */
-    List<SysRoleVO> page(IPage<SysRoleVO> page, SysRoleQuery query);
+    List<SysOrganizationVO> page(IPage<SysOrganizationVO> page, SysOrganizationQuery query);
 
     /**
      * 根据query查询
@@ -32,7 +32,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param query 查询条件
      * @return 数据列表
      */
-    List<SysRoleVO> list(SysRoleQuery query);
+    List<SysOrganizationVO> list(SysOrganizationQuery query);
 
     /**
      * 根据query查询ids
@@ -40,7 +40,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param query 查询条件
      * @return List<Long>
      */
-    List<Long> idsByQuery(SysRoleQuery query);
+    List<Long> idsByQuery(SysOrganizationQuery query);
 
     /**
      * 根据query统计数量
@@ -48,15 +48,15 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param query 查询条件
      * @return Integer
      */
-    Integer countByQuery(SysRoleQuery query);
+    Integer countByQuery(SysOrganizationQuery query);
 
     /**
      * 根据id查询详情
      *
      * @param id 数据Id
-     * @return SysRoleVO
+     * @return SysOrganizationVO
      */
-    SysRoleVO findDetail(Long id);
+    SysOrganizationVO findDetail(Long id);
 
     /**
      * 保存,逻辑处理
@@ -64,7 +64,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param dto 数据实体
      * @return 是否保存
      */
-    Boolean saveData(SysRoleDTO dto);
+    Boolean saveData(SysOrganizationDTO dto);
 
     /**
      * 根据id修改
@@ -72,7 +72,7 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param dto 数据实体
      * @return 是否保存
      */
-    Boolean modifyById(SysRoleDTO dto);
+    Boolean modifyById(SysOrganizationDTO dto);
 
     /**
      * 根据id删除,逻辑处理

@@ -1,11 +1,11 @@
 package com.thinker.cloud.upms.converter;
 
+import com.thinker.cloud.upms.api.sys.model.dto.SysRoleDTO;
+import com.thinker.cloud.upms.api.sys.model.vo.SysRoleVO;
+import com.thinker.cloud.upms.model.entity.SysRole;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import com.thinker.cloud.upms.model.vo.SysRoleVO;
-import com.thinker.cloud.upms.model.dto.SysRoleDTO;
-import com.thinker.cloud.upms.model.entity.SysRole;
 
 import java.util.List;
 

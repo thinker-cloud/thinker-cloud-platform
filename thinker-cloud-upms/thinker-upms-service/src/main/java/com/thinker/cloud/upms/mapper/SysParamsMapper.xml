@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinker.cloud.upms.mapper.SysRoleMapper">
-    <resultMap id="entity" type="com.thinker.cloud.upms.model.entity.SysRole"/>
-    <resultMap id="vo" extends="entity" type="com.thinker.cloud.upms.api.sys.model.vo.SysRoleVO"/>
+<mapper namespace="com.thinker.cloud.upms.mapper.SysParamsMapper">
+    <resultMap id="entity" type="com.thinker.cloud.upms.model.entity.SysParams"/>
+    <resultMap id="vo" extends="entity" type="com.thinker.cloud.upms.api.sys.model.vo.SysParamsVO"/>
     <sql id="condition">
         <if test="query != null">
             <if test="query.id != null">
                 and base.id = #{query.id}
             </if>
-            <if test="query.name != null and query.name != ''">
-                and base.name like concat('%',#{query.name},'%')
+            <if test="query.paramName != null and query.paramName != ''">
+                and base.param_name like concat('%',#{query.paramName},'%')
             </if>
-            <if test="query.code != null and query.code != ''">
-                and base.code like concat('%',#{query.code},'%')
+            <if test="query.paramKey != null and query.paramKey != ''">
+                and base.param_key like concat('%',#{query.paramKey},'%')
+            </if>
+            <if test="query.paramValue != null and query.paramValue != ''">
+                and base.param_value like concat('%',#{query.paramValue},'%')
             </if>
             <if test="query.enabled != null">
                 and base.enabled = #{query.enabled}
             </if>
-            <if test="query.dataScopeType != null">
-                and base.data_scope_type = #{query.dataScopeType}
-            </if>
             <if test="query.description != null and query.description != ''">
                 and base.description like concat('%',#{query.description},'%')
-            </if>
-            <if test="query.organizationId != null">
-                and base.organization_id = #{query.organizationId}
-            </if>
-            <if test="query.tenantId != null">
-                and base.tenant_id = #{query.tenantId}
             </if>
             <if test="query.isIncludeDelete == null or !query.isIncludeDelete">
                 and base.deleted = false
@@ -60,7 +54,8 @@
                 and
                 <choose>
                     <when test="query.ids.size() > 0">
-                        <foreach collection="query.ids" item="id" open="base.id in(" separator="," close=")">
+                        <foreach collection="query.ids" item="id"
+                                 open="base.id in(" separator="," close=")">
                             #{id}
                         </foreach>
                     </when>
@@ -74,7 +69,7 @@
 
     <select id="page" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_params as base
         <where>
             <include refid="condition"/>
         </where>
@@ -90,7 +85,7 @@
 
     <select id="list" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_params as base
         <where>
             <include refid="condition"/>
         </where>
@@ -107,7 +102,7 @@
 
     <select id="idsByQuery" resultType="java.lang.Long">
         select base.id
-        from sys_role as base
+        from sys_params as base
         <where>
             <include refid="condition"/>
         </where>
@@ -115,7 +110,7 @@
 
     <select id="countByQuery" resultType="java.lang.Integer">
         select count(1)
-        from sys_role as base
+        from sys_params as base
         <where>
             <include refid="condition"/>
         </where>
@@ -123,14 +118,14 @@
 
     <select id="selectById" resultMap="entity">
         select base.*
-        from sys_role as base
+        from sys_params as base
         where base.id = #{id}
         and base.deleted = false
     </select>
 
     <select id="findDetail" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_params as base
         where base.id = #{id}
         and base.deleted = false
     </select>

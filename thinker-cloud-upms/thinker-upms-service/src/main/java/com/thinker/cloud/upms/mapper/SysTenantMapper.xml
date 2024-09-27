@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thinker.cloud.upms.mapper.SysRoleMapper">
-    <resultMap id="entity" type="com.thinker.cloud.upms.model.entity.SysRole"/>
-    <resultMap id="vo" extends="entity" type="com.thinker.cloud.upms.api.sys.model.vo.SysRoleVO"/>
+<mapper namespace="com.thinker.cloud.upms.mapper.SysTenantMapper">
+    <resultMap id="entity" type="com.thinker.cloud.upms.model.entity.SysTenant"/>
+    <resultMap id="vo" extends="entity" type="com.thinker.cloud.upms.api.sys.model.vo.SysTenantVO"/>
     <sql id="condition">
         <if test="query != null">
             <if test="query.id != null">
@@ -14,20 +14,53 @@
             <if test="query.code != null and query.code != ''">
                 and base.code like concat('%',#{query.code},'%')
             </if>
+            <if test="query.address != null and query.address != ''">
+                and base.address like concat('%',#{query.address},'%')
+            </if>
+            <if test="query.startTime != null">
+                and base.start_time = #{query.startTime}
+            </if>
+            <if test="query.startStartTime != null">
+                and base.start_time >= #{query.startStartTime}
+            </if>
+            <if test="query.endStartTime != null">
+                and base.start_time &lt;= #{query.endStartTime}
+            </if>
+            <if test="query.endTime != null">
+                and base.end_time = #{query.endTime}
+            </if>
+            <if test="query.startEndTime != null">
+                and base.end_time >= #{query.startEndTime}
+            </if>
+            <if test="query.endEndTime != null">
+                and base.end_time &lt;= #{query.endEndTime}
+            </if>
+            <if test="query.maxUser != null">
+                and base.max_user = #{query.maxUser}
+            </if>
             <if test="query.enabled != null">
                 and base.enabled = #{query.enabled}
             </if>
-            <if test="query.dataScopeType != null">
-                and base.data_scope_type = #{query.dataScopeType}
+            <if test="query.sysName != null and query.sysName != ''">
+                and base.sys_name like concat('%',#{query.sysName},'%')
+            </if>
+            <if test="query.sysAbbr != null and query.sysAbbr != ''">
+                and base.sys_abbr like concat('%',#{query.sysAbbr},'%')
+            </if>
+            <if test="query.adminId != null">
+                and base.admin_id = #{query.adminId}
+            </if>
+            <if test="query.password != null and query.password != ''">
+                and base.password like concat('%',#{query.password},'%')
+            </if>
+            <if test="query.homePage != null and query.homePage != ''">
+                and base.home_page like concat('%',#{query.homePage},'%')
             </if>
             <if test="query.description != null and query.description != ''">
                 and base.description like concat('%',#{query.description},'%')
             </if>
-            <if test="query.organizationId != null">
-                and base.organization_id = #{query.organizationId}
-            </if>
-            <if test="query.tenantId != null">
-                and base.tenant_id = #{query.tenantId}
+            <if test="query.extendsInfo != null and query.extendsInfo != ''">
+                and base.extends_info like concat('%',#{query.extendsInfo},'%')
             </if>
             <if test="query.isIncludeDelete == null or !query.isIncludeDelete">
                 and base.deleted = false
@@ -60,7 +93,8 @@
                 and
                 <choose>
                     <when test="query.ids.size() > 0">
-                        <foreach collection="query.ids" item="id" open="base.id in(" separator="," close=")">
+                        <foreach collection="query.ids" item="id"
+                                 open="base.id in(" separator="," close=")">
                             #{id}
                         </foreach>
                     </when>
@@ -74,7 +108,7 @@
 
     <select id="page" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_tenant as base
         <where>
             <include refid="condition"/>
         </where>
@@ -90,7 +124,7 @@
 
     <select id="list" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_tenant as base
         <where>
             <include refid="condition"/>
         </where>
@@ -107,7 +141,7 @@
 
     <select id="idsByQuery" resultType="java.lang.Long">
         select base.id
-        from sys_role as base
+        from sys_tenant as base
         <where>
             <include refid="condition"/>
         </where>
@@ -115,7 +149,7 @@
 
     <select id="countByQuery" resultType="java.lang.Integer">
         select count(1)
-        from sys_role as base
+        from sys_tenant as base
         <where>
             <include refid="condition"/>
         </where>
@@ -123,14 +157,14 @@
 
     <select id="selectById" resultMap="entity">
         select base.*
-        from sys_role as base
+        from sys_tenant as base
         where base.id = #{id}
         and base.deleted = false
     </select>
 
     <select id="findDetail" resultMap="vo">
         select base.*
-        from sys_role as base
+        from sys_tenant as base
         where base.id = #{id}
         and base.deleted = false
     </select>

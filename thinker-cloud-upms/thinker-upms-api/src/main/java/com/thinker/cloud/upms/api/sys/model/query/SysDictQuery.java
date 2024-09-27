@@ -1,23 +1,24 @@
-package com.thinker.cloud.upms.model.query;
+package com.thinker.cloud.upms.api.sys.model.query;
 
 import com.thinker.cloud.core.model.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
 import java.util.Collection;
 import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 
 /**
- * 角色管理
+ * 公共字典
  *
  * @author admin
- * @since 2024-09-23 11:39:09
+ * @since 2024-09-27 17:44:19
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class SysRoleQuery extends PageQuery {
+public class SysDictQuery extends PageQuery {
 
     /**
      * 主键
@@ -30,24 +31,29 @@ public class SysRoleQuery extends PageQuery {
     private Collection<Long> ids;
 
     /**
-     * 角色名称
+     * 父节点id
      */
-    private String name;
+    private Long parentId;
 
     /**
-     * 角色编码
+     * 字典编码
      */
     private String code;
 
     /**
-     * 启用状态 0.禁用, 1.启用
+     * 字典名称
      */
-    private Boolean enabled;
+    private String label;
 
     /**
-     * 数据权限类型 1.全部 2.本机及子级 3.本级 4.当前用户 10.自定义
+     * 字典值
      */
-    private Integer dataScopeType;
+    private String value;
+
+    /**
+     * 排序
+     */
+    private Integer sort;
 
     /**
      * 备注描述
@@ -55,14 +61,9 @@ public class SysRoleQuery extends PageQuery {
     private String description;
 
     /**
-     * 组织id
+     * 扩展信息
      */
-    private Long organizationId;
-
-    /**
-     * 租户id
-     */
-    private Long tenantId;
+    private String extendsInfo;
 
     /**
      * 是否包含删除数据

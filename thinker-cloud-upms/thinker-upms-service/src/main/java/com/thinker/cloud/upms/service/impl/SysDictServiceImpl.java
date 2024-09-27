@@ -3,74 +3,74 @@ package com.thinker.cloud.upms.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.upms.api.sys.model.dto.SysRoleDTO;
-import com.thinker.cloud.upms.api.sys.model.query.SysRoleQuery;
-import com.thinker.cloud.upms.api.sys.model.vo.SysRoleVO;
-import com.thinker.cloud.upms.converter.SysRoleConverter;
-import com.thinker.cloud.upms.mapper.SysRoleMapper;
-import com.thinker.cloud.upms.model.entity.SysRole;
-import com.thinker.cloud.upms.service.ISysRoleService;
+import com.thinker.cloud.upms.api.sys.model.dto.SysDictDTO;
+import com.thinker.cloud.upms.api.sys.model.query.SysDictQuery;
+import com.thinker.cloud.upms.api.sys.model.vo.SysDictVO;
+import com.thinker.cloud.upms.converter.SysDictConverter;
+import com.thinker.cloud.upms.mapper.SysDictMapper;
+import com.thinker.cloud.upms.model.entity.SysDict;
+import com.thinker.cloud.upms.service.ISysDictService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * 角色管理 服务实现类
+ * 公共字典 服务实现类
  *
  * @author admin
- * @since 2024-09-23 11:39:09
+ * @since 2024-09-27 17:44:19
  */
 @Service
-public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements ISysRoleService {
+public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> implements ISysDictService {
 
     @Override
-    public List<SysRoleVO> page(IPage<SysRoleVO> page, SysRoleQuery query) {
+    public List<SysDictVO> page(IPage<SysDictVO> page, SysDictQuery query) {
         return baseMapper.page(page, query);
     }
 
     @Override
-    public List<SysRoleVO> list(SysRoleQuery query) {
+    public List<SysDictVO> list(SysDictQuery query) {
         return baseMapper.list(query);
     }
 
     @Override
-    public List<Long> idsByQuery(SysRoleQuery query) {
+    public List<Long> idsByQuery(SysDictQuery query) {
         return baseMapper.idsByQuery(query);
     }
 
     @Override
-    public Integer countByQuery(SysRoleQuery query) {
+    public Integer countByQuery(SysDictQuery query) {
         return baseMapper.countByQuery(query);
     }
 
     @Override
-    public SysRoleVO findDetail(Long id) {
+    public SysDictVO findDetail(Long id) {
         return baseMapper.findDetail(id);
     }
 
     @Override
-    public Boolean saveData(SysRoleDTO dto) {
+    public Boolean saveData(SysDictDTO dto) {
         // 转换数据并保存
-        SysRole entity = SysRoleConverter.INSTANTS.toEntity(dto);
+        SysDict entity = SysDictConverter.INSTANTS.toEntity(dto);
         return super.save(entity);
     }
 
     @Override
-    public Boolean modifyById(SysRoleDTO dto) {
+    public Boolean modifyById(SysDictDTO dto) {
         // 检查数据是否存在
-        SysRole oldEntity = baseMapper.selectById(dto.getId());
+        SysDict oldEntity = baseMapper.selectById(dto.getId());
         Optional.ofNullable(oldEntity).orElseThrow(() -> new FailException("操作失败，数据不存在"));
 
         // 转换数据并更新
-        SysRole entity = SysRoleConverter.INSTANTS.toEntity(dto);
+        SysDict entity = SysDictConverter.INSTANTS.toEntity(dto);
         return super.updateById(entity);
     }
 
     @Override
     public Boolean removeById(Long id) {
         // 检查数据是否存在
-        SysRole oldEntity = baseMapper.selectById(id);
+        SysDict oldEntity = baseMapper.selectById(id);
         Optional.ofNullable(oldEntity).orElseThrow(() -> new FailException("操作失败，数据不存在"));
 
         // 删除数据
