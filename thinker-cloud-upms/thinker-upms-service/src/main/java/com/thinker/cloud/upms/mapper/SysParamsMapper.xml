@@ -54,8 +54,7 @@
                 and
                 <choose>
                     <when test="query.ids.size() > 0">
-                        <foreach collection="query.ids" item="id"
-                                 open="base.id in(" separator="," close=")">
+                        <foreach collection="query.ids" item="id" open="base.id in(" separator="," close=")">
                             #{id}
                         </foreach>
                     </when>
