@@ -20,6 +20,7 @@
 		<project.build.encoding>UTF-8</project.build.encoding>
 
 		<thinker-auth-api.version>1.0.0-SNAPSHOT</thinker-auth-api.version>
+		<thinker-upms-api.version>1.0.0-SNAPSHOT</thinker-upms-api.version>
 	</properties>
 
 	<dependencies>
@@ -27,6 +28,12 @@
 			<groupId>com.thinker.cloud</groupId>
 			<artifactId>thinker-auth-api</artifactId>
 			<version>${thinker-auth-api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-upms-api</artifactId>
+			<version>${thinker-upms-api.version}</version>
 		</dependency>
 
 		<!-- 配置中心 -->

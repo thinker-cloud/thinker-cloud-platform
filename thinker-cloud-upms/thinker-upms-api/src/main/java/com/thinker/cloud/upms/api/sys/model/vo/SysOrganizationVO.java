@@ -1,11 +1,13 @@
 package com.thinker.cloud.upms.api.sys.model.vo;
 
+import com.thinker.cloud.core.utils.tree.TreeNode;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 组织架构
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
-public class SysOrganizationVO implements Serializable {
+public class SysOrganizationVO implements TreeNode<SysOrganizationVO>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -79,4 +81,9 @@ public class SysOrganizationVO implements Serializable {
      * 修改时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 子级列表
+     */
+    private List<SysOrganizationVO> subList;
 }

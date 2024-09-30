@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinker.cloud.upms.sys.mapper.SysUserMapper">
+	<resultMap id="entity" type="com.thinker.cloud.upms.sys.model.entity.SysUser"/>
+	<resultMap id="vo" extends="entity" type="com.thinker.cloud.upms.api.sys.model.vo.SysUserVO"/>
+	<sql id="condition">
+		<if test="query != null">
+			<if test="query.id != null">
+				and base.id = #{query.id}
+			</if>
+			<if test="query.username != null and query.username != ''">
+				and base.username like concat('%',#{query.username},'%')
+			</if>
+			<if test="query.password != null and query.password != ''">
+				and base.password like concat('%',#{query.password},'%')
+			</if>
+			<if test="query.salt != null and query.salt != ''">
+				and base.salt like concat('%',#{query.salt},'%')
+			</if>
+			<if test="query.name != null and query.name != ''">
+				and base.name like concat('%',#{query.name},'%')
+			</if>
+			<if test="query.nickname != null and query.nickname != ''">
+				and base.nickname like concat('%',#{query.nickname},'%')
+			</if>
+			<if test="query.type != null">
+				and base.type = #{query.type}
+			</if>
+			<if test="query.status != null">
+				and base.status = #{query.status}
+			</if>
+			<if test="query.phone != null and query.phone != ''">
+				and base.phone like concat('%',#{query.phone},'%')
+			</if>
+			<if test="query.sex != null">
+				and base.sex = #{query.sex}
+			</if>
+			<if test="query.email != null and query.email != ''">
+				and base.email like concat('%',#{query.email},'%')
+			</if>
+			<if test="query.avatar != null and query.avatar != ''">
+				and base.avatar like concat('%',#{query.avatar},'%')
+			</if>
+			<if test="query.wxOpenId != null and query.wxOpenId != ''">
+				and base.wx_open_id like concat('%',#{query.wxOpenId},'%')
+			</if>
+			<if test="query.miniOpenId != null and query.miniOpenId != ''">
+				and base.mini_open_id like concat('%',#{query.miniOpenId},'%')
+			</if>
+			<if test="query.organizationId != null">
+				and base.organization_id = #{query.organizationId}
+			</if>
+			<if test="query.tenantId != null">
+				and base.tenant_id = #{query.tenantId}
+			</if>
+			<if test="query.isIncludeDelete == null or !query.isIncludeDelete">
+				and base.deleted = false
+			</if>
+			<if test="query.createBy != null">
+				and base.create_by = #{query.createBy}
+			</if>
+			<if test="query.createTime != null">
+				and base.create_time = #{query.createTime}
+			</if>
+			<if test="query.startCreateTime != null">
+				and base.create_time >= #{query.startCreateTime}
+			</if>
+			<if test="query.endCreateTime != null">
+				and base.create_time &lt;= #{query.endCreateTime}
+			</if>
+			<if test="query.updateBy != null">
+				and base.update_by = #{query.updateBy}
+			</if>
+			<if test="query.updateTime != null">
+				and base.update_time = #{query.updateTime}
+			</if>
+			<if test="query.startUpdateTime != null">
+				and base.update_time >= #{query.startUpdateTime}
+			</if>
+			<if test="query.endUpdateTime != null">
+				and base.update_time &lt;= #{query.endUpdateTime}
+			</if>
+			<if test="query.ids != null">
+				and
+				<choose>
+					<when test="query.ids.size() > 0">
+						<foreach collection="query.ids" item="id" open="base.id in(" separator="," close=")">
+							#{id}
+						</foreach>
+					</when>
+					<otherwise>
+						false
+					</otherwise>
+				</choose>
+			</if>
+		</if>
+	</sql>
+
+	<select id="page" resultMap="vo">
+		select base.*
+		from sys_user as base
+		<where>
+			<include refid="condition"/>
+		</where>
+		<choose>
+			<when test="query.orderField != null and query.orderField != ''">
+				order by ${query.orderField} ${query.order}
+			</when>
+			<otherwise>
+				order by base.create_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="list" resultMap="vo">
+		select base.*
+		from sys_user as base
+		<where>
+			<include refid="condition"/>
+		</where>
+		<choose>
+			<when test="query.orderField != null and query.orderField != ''">
+				order by ${query.orderField} ${query.order}
+			</when>
+			<otherwise>
+				order by base.create_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="idsByQuery" resultType="java.lang.Long">
+		select base.id
+		from sys_user as base
+		<where>
+			<include refid="condition"/>
+		</where>
+	</select>
+
+	<select id="countByQuery" resultType="java.lang.Integer">
+		select count(1)
+		from sys_user as base
+		<where>
+			<include refid="condition"/>
+		</where>
+	</select>
+
+	<select id="selectById" resultMap="entity">
+		select base.*
+		from sys_user as base
+		where base.id = #{id}
+		  and base.deleted = false
+	</select>
+
+	<select id="findDetail" resultMap="vo">
+		select base.*
+		from sys_user as base
+		where base.id = #{id}
+		  and base.deleted = false
+	</select>
+</mapper>

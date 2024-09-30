@@ -34,7 +34,17 @@ public class SysRoleMenuQuery extends PageQuery {
     private Long roleId;
 
     /**
+     * 角色ids
+     */
+    private Collection<Long> roleIds;
+
+    /**
      * 菜单id
      */
     private Long menuId;
+
+    /**
+     * 菜单ids
+     */
+    private Collection<Long> menuIds;
 }

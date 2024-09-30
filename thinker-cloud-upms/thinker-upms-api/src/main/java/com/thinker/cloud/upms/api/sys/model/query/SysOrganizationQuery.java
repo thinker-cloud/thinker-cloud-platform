@@ -5,9 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
 
 /**
  * 组织架构
@@ -109,4 +108,5 @@ public class SysOrganizationQuery extends PageQuery {
      * 筛选结束:修改时间
      */
     private LocalDateTime endUpdateTime;
+
 }
