@@ -12,19 +12,20 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum AuthTypeEnum implements IEnumDict<String> {
+public enum LoginTypeEnum implements IEnumDict<String> {
 
     //
-    PASSWORD("账号密码登录"),
-    SMS("验证码登录"),
-    WX("微信登录"),
-    WX_MINI("微信小程序登录");
+    PASSWORD("password", "账号密码登录"),
+    SMS("sms", "验证码登录"),
+    WX("wx", "微信登录"),
+    WX_MINI("wx_mini", "微信小程序登录");
 
+    private final String value;
     private final String desc;
 
     @Override
     public String getValue() {
-        return this.name();
+        return this.value;
     }
 
     /**
@@ -33,7 +34,7 @@ public enum AuthTypeEnum implements IEnumDict<String> {
      * @param type type
      * @return AuthTypeEnum
      */
-    public static AuthTypeEnum resolver(String type) {
-        return EnumCacheUtil.loadEnumValue(AuthTypeEnum.class, type);
+    public static LoginTypeEnum resolver(String type) {
+        return EnumCacheUtil.loadEnumValue(LoginTypeEnum.class, type, null);
     }
 }

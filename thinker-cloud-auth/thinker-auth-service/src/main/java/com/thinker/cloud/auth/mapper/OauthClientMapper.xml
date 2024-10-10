@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinker.cloud.auth.mapper.OauthClientMapper">
+	<resultMap id="entity" type="com.thinker.cloud.auth.model.entity.OauthClient"/>
+	<resultMap id="vo" extends="entity" type="com.thinker.cloud.auth.api.model.vo.OauthClientVO"/>
+	<sql id="condition">
+		<if test="query != null">
+			<if test="query.id != null">
+				and base.id = #{query.id}
+			</if>
+			<if test="query.clientId != null and query.clientId != ''">
+				and base.client_id like concat('%',#{query.clientId},'%')
+			</if>
+			<if test="query.clientKey != null and query.clientKey != ''">
+				and base.client_key like concat('%',#{query.clientKey},'%')
+			</if>
+			<if test="query.clientSecret != null and query.clientSecret != ''">
+				and base.client_secret like concat('%',#{query.clientSecret},'%')
+			</if>
+			<if test="query.scope != null and query.scope != ''">
+				and base.scope like concat('%',#{query.scope},'%')
+			</if>
+			<if test="query.grantTypes != null and query.grantTypes != ''">
+				and base.grant_types like concat('%',#{query.grantTypes},'%')
+			</if>
+			<if test="query.enabled != null">
+				and base.enabled = #{query.enabled}
+			</if>
+			<if test="query.redirectUri != null and query.redirectUri != ''">
+				and base.redirect_uri like concat('%',#{query.redirectUri},'%')
+			</if>
+			<if test="query.accessTokenValidity != null">
+				and base.access_token_validity = #{query.accessTokenValidity}
+			</if>
+			<if test="query.refreshTokenValidity != null">
+				and base.refresh_token_validity = #{query.refreshTokenValidity}
+			</if>
+			<if test="query.isEncoder != null">
+				and base.is_encoder = #{query.isEncoder}
+			</if>
+			<if test="query.isCaptcha != null">
+				and base.is_captcha = #{query.isCaptcha}
+			</if>
+			<if test="query.ipWhiteList != null and query.ipWhiteList != ''">
+				and base.ip_white_list like concat('%',#{query.ipWhiteList},'%')
+			</if>
+			<if test="query.additionalInfo != null and query.additionalInfo != ''">
+				and base.additional_info like concat('%',#{query.additionalInfo},'%')
+			</if>
+			<if test="query.autoApprove != null and query.autoApprove != ''">
+				and base.auto_approve like concat('%',#{query.autoApprove},'%')
+			</if>
+			<if test="query.description != null and query.description != ''">
+				and base.description like concat('%',#{query.description},'%')
+			</if>
+			<if test="query.tenantId != null">
+				and base.tenant_id = #{query.tenantId}
+			</if>
+			<if test="query.isIncludeDelete == null or !query.isIncludeDelete">
+				and base.deleted = false
+			</if>
+			<if test="query.createBy != null">
+				and base.create_by = #{query.createBy}
+			</if>
+			<if test="query.createTime != null">
+				and base.create_time = #{query.createTime}
+			</if>
+			<if test="query.startCreateTime != null">
+				and base.create_time >= #{query.startCreateTime}
+			</if>
+			<if test="query.endCreateTime != null">
+				and base.create_time &lt;= #{query.endCreateTime}
+			</if>
+			<if test="query.updateBy != null">
+				and base.update_by = #{query.updateBy}
+			</if>
+			<if test="query.updateTime != null">
+				and base.update_time = #{query.updateTime}
+			</if>
+			<if test="query.startUpdateTime != null">
+				and base.update_time >= #{query.startUpdateTime}
+			</if>
+			<if test="query.endUpdateTime != null">
+				and base.update_time &lt;= #{query.endUpdateTime}
+			</if>
+			<if test="query.ids != null">
+				and
+				<choose>
+					<when test="query.ids.size() > 0">
+						<foreach collection="query.ids" item="id" open="base.id in(" separator="," close=")">
+							#{id}
+						</foreach>
+					</when>
+					<otherwise>
+						false
+					</otherwise>
+				</choose>
+			</if>
+		</if>
+	</sql>
+
+	<select id="page" resultMap="vo">
+		select base.*
+		from oauth_client as base
+		<where>
+			<include refid="condition"/>
+		</where>
+		<choose>
+			<when test="query.orderField != null and query.orderField != ''">
+				order by ${query.orderField} ${query.order}
+			</when>
+			<otherwise>
+				order by base.create_time desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="list" resultMap="vo">
+		select base.*
+		from oauth_client as base
+		<where>
+			<include refid="condition"/>
+		</where>
+		<choose>
+			<when test="query.orderField != null and query.orderField != ''">
+				order by ${query.orderField} ${query.order}
+			</when>
+			<otherwise>
+				order by base.create_time desc
+			</otherwise>
+		</choose>
+
+	</select>
+
+	<select id="idsByQuery" resultType="java.lang.Long">
+		select base.id
+		from oauth_client as base
+		<where>
+			<include refid="condition"/>
+		</where>
+	</select>
+
+	<select id="countByQuery" resultType="java.lang.Integer">
+		select count(1)
+		from oauth_client as base
+		<where>
+			<include refid="condition"/>
+		</where>
+	</select>
+
+	<select id="selectById" resultMap="entity">
+		select base.*
+		from oauth_client as base
+		where base.id = #{id}
+		and base.deleted = false
+	</select>
+
+	<select id="findDetail" resultMap="vo">
+		select base.*
+		from oauth_client as base
+		where base.id = #{id}
+		and base.deleted = false
+	</select>
+</mapper>

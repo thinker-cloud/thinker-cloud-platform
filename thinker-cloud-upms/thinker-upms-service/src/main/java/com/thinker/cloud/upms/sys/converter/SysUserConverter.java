@@ -2,7 +2,7 @@ package com.thinker.cloud.upms.sys.converter;
 
 import com.thinker.cloud.upms.api.sys.model.dto.SysUserDTO;
 import com.thinker.cloud.upms.api.sys.model.vo.SysUserVO;
-import com.thinker.cloud.upms.api.uac.model.AuthUser;
+import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import com.thinker.cloud.upms.sys.model.entity.SysUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -43,7 +43,7 @@ public interface SysUserConverter {
      * @param sysUser sysUser
      * @return AuthUser
      */
-    AuthUser toAuth(SysUser sysUser);
+    AuthUserDetail toAuth(SysUser sysUser);
 
     /**
      * entity to DTO

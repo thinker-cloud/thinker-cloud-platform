@@ -1,7 +1,7 @@
 package com.thinker.cloud.upms.uac.handler;
 
 import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.upms.api.uac.enums.AuthTypeEnum;
+import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class AuthLoginHandlerFactory {
 
-    private final Map<AuthTypeEnum, AuthLoginHandler> authLoginHandlerMap;
+    private final Map<LoginTypeEnum, AuthLoginHandler> authLoginHandlerMap;
 
     public AuthLoginHandlerFactory(List<AbstractAuthLoginHandler> authLoginHandlerList) {
         this.authLoginHandlerMap = authLoginHandlerList.stream()
@@ -33,8 +33,8 @@ public class AuthLoginHandlerFactory {
      * @return AuthLoginHandler
      */
     public AuthLoginHandler get(String authType) {
-        AuthTypeEnum authTypeEnum = AuthTypeEnum.resolver(authType);
-        AuthLoginHandler loginHandler = authLoginHandlerMap.get(authTypeEnum);
+        LoginTypeEnum loginTypeEnum = LoginTypeEnum.resolver(authType);
+        AuthLoginHandler loginHandler = authLoginHandlerMap.get(loginTypeEnum);
         return Optional.ofNullable(loginHandler).orElseThrow(() -> FailException.of("暂不支持此认证方式"));
     }
 }

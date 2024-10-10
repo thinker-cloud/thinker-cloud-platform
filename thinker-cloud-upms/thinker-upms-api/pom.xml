@@ -21,7 +21,9 @@
 	</properties>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-cloud-security-starter</artifactId>
+		</dependency>
 	</dependencies>
-
 </project>

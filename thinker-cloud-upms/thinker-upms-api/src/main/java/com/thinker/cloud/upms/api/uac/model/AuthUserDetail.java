@@ -19,7 +19,7 @@ import java.util.Collection;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthUser implements Serializable {
+public class AuthUserDetail implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -4816804440827648554L;

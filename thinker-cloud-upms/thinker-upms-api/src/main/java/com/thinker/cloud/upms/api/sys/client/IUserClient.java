@@ -1,7 +1,8 @@
 package com.thinker.cloud.upms.api.sys.client;
 
+import com.thinker.cloud.security.annotation.Inner;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
-import com.thinker.cloud.upms.api.uac.model.AuthUser;
+import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 
 import javax.validation.Valid;
 
@@ -18,6 +19,7 @@ public interface IUserClient {
      * @param params params
      * @return AuthUser
      */
-    AuthUser getAuthUser(@Valid AuthParams params);
+    @Inner
+    AuthUserDetail getAuthUser(@Valid AuthParams params);
 
 }

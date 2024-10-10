@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinker.cloud.core.exception.FailException;
 import com.thinker.cloud.security.credential.CredentialTemplate;
 import com.thinker.cloud.security.credential.model.CredentialValid;
-import com.thinker.cloud.upms.api.uac.enums.AuthTypeEnum;
+import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
-import com.thinker.cloud.upms.api.uac.model.AuthUser;
+import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import com.thinker.cloud.upms.sys.model.entity.SysUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,12 @@ public class SmsAuthLoginHandler extends AbstractAuthLoginHandler {
     private final CredentialTemplate credentialTemplate;
 
     @Override
-    protected AuthTypeEnum getAuthType() {
-        return AuthTypeEnum.SMS;
+    protected LoginTypeEnum getAuthType() {
+        return LoginTypeEnum.SMS;
     }
 
     @Override
-    public AuthUser getAuthUser(AuthParams authParam) {
+    public AuthUserDetail getAuthUser(AuthParams authParam) {
         // 检查验证码是否正确
         CredentialValid validation = new CredentialValid()
                 .setSubject(authParam.getSubject())

@@ -2,7 +2,7 @@ package com.thinker.cloud.upms.uac.handler;
 
 
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
-import com.thinker.cloud.upms.api.uac.model.AuthUser;
+import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 
 /**
  * 登录处理器
@@ -17,5 +17,5 @@ public interface AuthLoginHandler {
      * @param authParam 认证参数
      * @return AuthUser
      */
-    AuthUser getAuthUser(AuthParams authParam);
+    AuthUserDetail getAuthUser(AuthParams authParam);
 }

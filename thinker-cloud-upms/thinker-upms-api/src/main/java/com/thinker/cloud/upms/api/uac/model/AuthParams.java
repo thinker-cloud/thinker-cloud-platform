@@ -1,5 +1,6 @@
 package com.thinker.cloud.upms.api.uac.model;
 
+import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,4 +42,9 @@ public class AuthParams implements Serializable {
     @NotBlank(message = "认证凭证不能为空")
     private String credential;
 
+    public AuthParams(LoginTypeEnum authType, String subject, String credential) {
+        this.authType = authType.getValue();
+        this.subject = subject;
+        this.credential = credential;
+    }
 }

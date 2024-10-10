@@ -1,4 +1,4 @@
-package com.thinker.cloud.upms;
+package com.thinker.cloud.auth;
 
 import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -39,7 +39,7 @@ public class CodeGenerator {
     /**
      * JDBC相关配置
      */
-    private static final String URL = "jdbc:mysql://120.77.206.150:13306/thinker-upms?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false";
+    private static final String URL = "jdbc:mysql://120.77.206.150:13306/thinker-auth?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false";
     private static final String USER_NAME = "root";
     private static final String PASSWORD = "123456!";
 

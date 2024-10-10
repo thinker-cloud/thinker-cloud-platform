@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.support.base;
+package com.thinker.cloud.auth.support;
 
 import cn.hutool.core.util.StrUtil;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *
  * @author admin
  */
-public abstract class BaseOAuth2AuthenticationConverter<T extends BaseOauth2AuthenticationToken> implements AuthenticationConverter {
+public abstract class AbstractAuthenticationConverter<T extends AbstractAuthenticationToken> implements AuthenticationConverter {
 
     @Override
     public Authentication convert(HttpServletRequest request) {
@@ -31,12 +31,6 @@ public abstract class BaseOAuth2AuthenticationConverter<T extends BaseOauth2Auth
             return null;
         }
 
-        // 获取请求参数
-        MultiValueMap<String, String> parameters = OAuth2EndpointUtils.getParameters(request);
-
-        // 校验请求参数
-        this.checkAuthParams(parameters);
-
         // 获取客户端凭证信息
         Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
         if (clientPrincipal == null) {
@@ -44,10 +38,12 @@ public abstract class BaseOAuth2AuthenticationConverter<T extends BaseOauth2Auth
                     , OAuth2ErrorCodes.INVALID_CLIENT, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI));
         }
 
+        // 获取请求参数
+        MultiValueMap<String, String> parameters = OAuth2EndpointUtils.getParameters(request);
+
         // 创建 Authentication Token
-        T authentication = this.genAuthToken(parameters);
-        authentication.setClientPrincipal(clientPrincipal);
-        authentication.setScopes(this.getScopes(parameters));
+        T authentication = this.buildAuthToken(parameters);
+        authentication.setScopes(getRequestScopes(parameters));
         authentication.setAdditionalParameters(getAdditionalParameters(parameters));
         return authentication;
     }
@@ -60,19 +56,12 @@ public abstract class BaseOAuth2AuthenticationConverter<T extends BaseOauth2Auth
     public abstract String getGrantType();
 
     /**
-     * 校验参数
-     *
-     * @param parameters 请求参数
-     */
-    public abstract void checkAuthParams(MultiValueMap<String, String> parameters);
-
-    /**
      * 构建具体类型的token
      *
      * @param parameters 请求参数
      * @return T
      */
-    public abstract T genAuthToken(MultiValueMap<String, String> parameters);
+    public abstract T buildAuthToken(MultiValueMap<String, String> parameters);
 
     /**
      * 获取授权范围
@@ -80,7 +69,7 @@ public abstract class BaseOAuth2AuthenticationConverter<T extends BaseOauth2Auth
      * @param parameters parameters
      * @return Set<String>
      */
-    public Set<String> getScopes(MultiValueMap<String, String> parameters) {
+    public static Set<String> getRequestScopes(MultiValueMap<String, String> parameters) {
         String scope = parameters.getFirst(OAuth2ParameterNames.SCOPE);
         if (StrUtil.isNotEmpty(scope)) {
             String[] scopes = StringUtils.delimitedListToStringArray(scope, " ");

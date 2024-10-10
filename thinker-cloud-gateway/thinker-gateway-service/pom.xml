@@ -22,13 +22,6 @@
     </properties>
 
     <dependencies>
-        <!-- 核心 -->
-        <dependency>
-            <groupId>com.thinker.cloud</groupId>
-            <artifactId>thinker-cloud-core-starter</artifactId>
-            <version>${thinker-cloud.version}</version>
-        </dependency>
-
         <!-- 配置中心 -->
         <dependency>
             <groupId>com.thinker.cloud</groupId>
