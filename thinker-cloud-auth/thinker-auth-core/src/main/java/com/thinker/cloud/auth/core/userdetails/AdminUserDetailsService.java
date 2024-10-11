@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.userdetails;
+package com.thinker.cloud.auth.core.userdetails;
 
 import com.thinker.cloud.core.constants.CommonConstants;
 import com.thinker.cloud.security.constants.SecurityConstants;

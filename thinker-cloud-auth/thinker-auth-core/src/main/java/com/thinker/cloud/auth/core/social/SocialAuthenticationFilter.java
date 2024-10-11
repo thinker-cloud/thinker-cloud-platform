@@ -1,6 +1,6 @@
-package com.thinker.cloud.auth.social;
+package com.thinker.cloud.auth.core.social;
 
-import com.thinker.cloud.auth.support.AbstractAuthenticationFilter;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationFilter;
 import com.thinker.cloud.security.constants.SecurityConstants;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;

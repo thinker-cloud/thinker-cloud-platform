@@ -1,7 +1,7 @@
-package com.thinker.cloud.auth.config;
+package com.thinker.cloud.auth.core.config;
 
-import com.thinker.cloud.auth.social.SocialSecurityConfigurer;
-import com.thinker.cloud.auth.userdetails.AdminUserDetailsService;
+import com.thinker.cloud.auth.core.social.SocialSecurityConfigurer;
+import com.thinker.cloud.auth.core.userdetails.AdminUserDetailsService;
 import com.thinker.cloud.security.component.PermitAllUrlMatcher;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

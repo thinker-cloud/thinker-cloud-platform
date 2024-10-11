@@ -1,7 +1,7 @@
-package com.thinker.cloud.auth.social;
+package com.thinker.cloud.auth.core.social;
 
-import com.thinker.cloud.auth.support.AbstractAuthenticationProvider;
-import com.thinker.cloud.auth.userdetails.AdminUserDetailsService;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationProvider;
+import com.thinker.cloud.auth.core.userdetails.AdminUserDetailsService;
 import com.thinker.cloud.core.exception.AbstractException;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import lombok.extern.slf4j.Slf4j;

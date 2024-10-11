@@ -1,6 +1,6 @@
-package com.thinker.cloud.auth.support;
+package com.thinker.cloud.auth.core.support;
 
-import com.thinker.cloud.auth.exception.AuthRequestException;
+import com.thinker.cloud.auth.core.exception.AuthRequestException;
 import com.thinker.cloud.security.component.Oauth2AuthExceptionEntryPoint;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
 import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;

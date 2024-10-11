@@ -1,6 +1,6 @@
-package com.thinker.cloud.auth.social;
+package com.thinker.cloud.auth.core.social;
 
-import com.thinker.cloud.auth.userdetails.AdminUserDetailsService;
+import com.thinker.cloud.auth.core.userdetails.AdminUserDetailsService;
 import com.thinker.cloud.security.component.Oauth2AuthExceptionEntryPoint;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationEventPublisher;

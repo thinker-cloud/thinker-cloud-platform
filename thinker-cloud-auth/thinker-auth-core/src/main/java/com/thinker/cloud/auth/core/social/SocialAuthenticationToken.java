@@ -1,6 +1,6 @@
-package com.thinker.cloud.auth.social;
+package com.thinker.cloud.auth.core.social;
 
-import com.thinker.cloud.auth.support.AbstractAuthenticationToken;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationToken;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;

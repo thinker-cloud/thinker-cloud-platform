@@ -22,6 +22,7 @@
 
 	<modules>
 		<module>thinker-auth-api</module>
+		<module>thinker-auth-core</module>
 		<module>thinker-auth-service</module>
 	</modules>
 </project>

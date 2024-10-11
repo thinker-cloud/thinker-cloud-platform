@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.config;
+package com.thinker.cloud.auth.core.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

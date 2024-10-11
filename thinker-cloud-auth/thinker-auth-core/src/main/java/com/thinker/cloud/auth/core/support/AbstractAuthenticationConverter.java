@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.support;
+package com.thinker.cloud.auth.core.support;
 
 import cn.hutool.core.util.StrUtil;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;

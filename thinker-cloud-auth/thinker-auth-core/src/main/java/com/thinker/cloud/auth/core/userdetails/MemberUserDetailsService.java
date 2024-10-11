@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.userdetails;
+package com.thinker.cloud.auth.core.userdetails;
 
 import com.thinker.cloud.upms.api.sys.client.IUserClient;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;

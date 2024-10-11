@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.support;
+package com.thinker.cloud.auth.core.support;
 
 import lombok.Getter;
 import lombok.Setter;

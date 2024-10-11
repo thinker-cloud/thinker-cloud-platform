@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.support;
+package com.thinker.cloud.auth.core.support;
 
 import com.google.common.collect.Maps;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;

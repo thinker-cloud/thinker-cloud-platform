@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.constants;
+package com.thinker.cloud.auth.core.constants;
 
 /**
  * 公共常量类

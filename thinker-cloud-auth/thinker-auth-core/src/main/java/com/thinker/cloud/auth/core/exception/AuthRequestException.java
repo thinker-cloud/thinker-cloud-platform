@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.exception;
+package com.thinker.cloud.auth.core.exception;
 
 import com.thinker.cloud.security.exception.AbstractAuthenticationException;
 
