@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.thinker.cloud.auth.api.model.dto.OauthClientDTO;
 import com.thinker.cloud.auth.api.model.query.OauthClientQuery;
 import com.thinker.cloud.auth.api.model.vo.OauthClientVO;
+import com.thinker.cloud.auth.core.service.IOauthClientRepository;
 import com.thinker.cloud.auth.model.entity.OauthClient;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * @author admin
  * @since 2024-10-10 10:58:49
  */
-public interface IOauthClientService extends IService<OauthClient> {
+public interface IOauthClientService extends IService<OauthClient>, IOauthClientRepository {
 
     /**
      * 根据query分页查询

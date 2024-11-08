@@ -112,4 +112,7 @@
 	<logger name="springfox.documentation" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
+	<logger name="org.springdoc.core.utils.SpringDocAnnotationsUtils" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
 </configuration>

@@ -161,4 +161,11 @@
 		where base.id = #{id}
 		and base.deleted = false
 	</select>
+
+	<select id="selectByClientId" resultMap="vo">
+		select base.*
+		from oauth_client as base
+		where base.client_id = #{clientId}
+		and base.deleted = false
+	</select>
 </mapper>

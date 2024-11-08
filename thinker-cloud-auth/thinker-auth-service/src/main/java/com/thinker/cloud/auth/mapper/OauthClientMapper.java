@@ -76,4 +76,13 @@ public interface OauthClientMapper extends BaseMapper<OauthClient> {
      */
     @Slave
     OauthClientVO findDetail(@Param("id") Long id);
+
+    /**
+     * 根据clientId查询客户端详情
+     *
+     * @param clientId clientId
+     * @return OauthClientVO
+     */
+    @Slave
+    OauthClientVO selectByClientId(@Param("clientId") String clientId);
 }

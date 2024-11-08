@@ -46,7 +46,7 @@ public class OauthClient extends SuperEntity {
     /**
      * 授权类型
      */
-    private String grantTypes;
+    private String[] grantTypes;
 
     /**
      * 是否启用 0.禁用 1.启用

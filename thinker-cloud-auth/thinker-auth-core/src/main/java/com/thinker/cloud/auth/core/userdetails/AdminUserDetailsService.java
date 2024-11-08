@@ -67,17 +67,14 @@ public class AdminUserDetailsService implements BaseUserDetailsService {
                 .map(menuId -> SecurityConstants.AUTH_MENU + menuId)
                 .forEach(authsSet::add);
 
-        // 菜单接口权限
-        userDetail.getPermissions().stream()
-                .filter(Objects::nonNull)
-                .map(menuId -> SecurityConstants.AUTH_MENU + menuId)
-                .forEach(authsSet::add);
-
         // 数据权限
         userDetail.getDataScopeIds().stream()
                 .filter(Objects::nonNull)
                 .map(dataScopeId -> SecurityConstants.AUTH_DATA_SCOPE + dataScopeId)
                 .forEach(authsSet::add);
+
+        // 接口权限
+        authsSet.addAll(userDetail.getPermissions());
 
         // 权限集合
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils

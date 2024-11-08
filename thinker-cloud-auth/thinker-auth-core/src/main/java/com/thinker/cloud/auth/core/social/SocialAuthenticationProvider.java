@@ -57,6 +57,6 @@ public class SocialAuthenticationProvider extends AbstractAuthenticationProvider
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return SocialAuthenticationProvider.class.isAssignableFrom(authentication);
+        return SocialAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

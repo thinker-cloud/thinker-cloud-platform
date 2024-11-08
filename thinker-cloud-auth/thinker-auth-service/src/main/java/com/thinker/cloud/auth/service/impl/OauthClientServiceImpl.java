@@ -50,6 +50,11 @@ public class OauthClientServiceImpl extends ServiceImpl<OauthClientMapper, Oauth
     }
 
     @Override
+    public OauthClientVO loadClientByClientId(String clientId) {
+        return baseMapper.selectByClientId(clientId);
+    }
+
+    @Override
     public Boolean saveData(OauthClientDTO dto) {
         // 转换数据并保存
         OauthClient entity = OauthClientConverter.INSTANTS.toEntity(dto);

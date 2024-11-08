@@ -100,7 +100,7 @@
 	<logger name="org.hibernate.validator" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
-	<logger name="org.springframework.web" level="TRACE" additivity="false">
+	<logger name="org.springframework.web.client" level="ERROR" additivity="false">
 		<appender-ref ref="debug"/>
 	</logger>
 	<logger name="org.springframework.data.convert" level="ERROR" additivity="false">
@@ -110,6 +110,9 @@
 		<appender-ref ref="error"/>
 	</logger>
 	<logger name="springfox.documentation" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
+	<logger name="org.springdoc.core.utils.SpringDocAnnotationsUtils" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
 </configuration>

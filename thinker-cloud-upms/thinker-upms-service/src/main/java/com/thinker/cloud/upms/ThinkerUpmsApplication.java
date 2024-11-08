@@ -1,6 +1,7 @@
 package com.thinker.cloud.upms;
 
 import com.thinker.cloud.security.annotation.EnableResourceServer;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -11,6 +12,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author xfy
  * @since 2024-09-19 17:52
  **/
+@DubboService
 @EnableResourceServer
 @EnableDiscoveryClient
 @SpringBootApplication

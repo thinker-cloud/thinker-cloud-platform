@@ -21,3 +21,25 @@ spring:
     import:
       - nacos:application-${spring.profiles.active}.yml
       - nacos:${spring.application.name}-${spring.profiles.active}.yml
+
+dubbo:
+  scan:
+    base-packages:
+      - com.thinker.cloud
+  # 服务名
+  application:
+    name: ${spring.application.name}
+  # 服务注册
+  registry:
+    register-mode: instance
+    username: ${spring.cloud.nacos.username}
+    password: ${spring.cloud.nacos.password}
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    parameters:
+      -namespace: ${spring.cloud.nacos.config.namespace}
+  # 关闭消费者依赖服务启动检查
+  consumer:
+    check: false
+  provider:
+    # 屏蔽原生异常和参数校验异常拦截器使用自定义拦截器
+    filter: -exception,-validation

@@ -37,6 +37,6 @@ public class SocialSecurityConfigurer extends AbstractHttpConfigurer<SocialSecur
                 adminUserDetailsService, authorizationService, OAuth2AuthExtendUtils.getTokenGenerator(http));
 
         http.authenticationProvider(authenticationProvider)
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
