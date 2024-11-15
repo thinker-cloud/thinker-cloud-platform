@@ -4,11 +4,13 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinker.cloud.auth.api.model.vo.AccessTokenVO;
-import com.thinker.cloud.auth.core.handler.AuthenticationFailureEvenHandler;
+import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationFailureHandler;
 import com.thinker.cloud.core.resolver.KeyStrResolver;
 import com.thinker.cloud.core.utils.ListUtil;
 import com.thinker.cloud.core.utils.spring.SpringContextHolder;
+import com.thinker.cloud.security.component.AccessTokenResponseHttpMessageConverter;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
 import com.thinker.cloud.security.constants.SecurityConstants;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
@@ -20,15 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
@@ -47,14 +46,14 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OauthTokenDealService {
+public class Oauth2TokenEndpointService {
 
+    private final ObjectMapper objectMapper;
     private final CacheManager cacheManager;
     private final KeyStrResolver keyStrResolver;
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuth2AuthorizationService authorizationService;
-    private final AuthenticationFailureEvenHandler authenticationFailureEvenHandler;
-    private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
+    private final Oauth2AuthenticationFailureHandler authenticationFailureHandler;
 
     /**
      * 校验token
@@ -64,8 +63,7 @@ public class OauthTokenDealService {
     public void checkToken(String token, HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
         if (StrUtil.isBlank(token)) {
-            httpResponse.setStatusCode(HttpStatus.UNAUTHORIZED);
-            authenticationFailureEvenHandler.onAuthenticationFailure(request, response,
+            authenticationFailureHandler.onAuthenticationFailure(request, response,
                     new InvalidBearerTokenException(OAuth2ErrorCodesExpand.TOKEN_MISSING));
             return;
         }
@@ -73,14 +71,15 @@ public class OauthTokenDealService {
         // 如果令牌不存在 返回401
         OAuth2Authorization authorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
         if (authorization == null || authorization.getAccessToken() == null) {
-            authenticationFailureEvenHandler.onAuthenticationFailure(request, response,
+            authenticationFailureHandler.onAuthenticationFailure(request, response,
                     new InvalidBearerTokenException(OAuth2ErrorCodesExpand.INVALID_BEARER_TOKEN));
             return;
         }
 
+        AccessTokenResponseHttpMessageConverter messageConverter = new AccessTokenResponseHttpMessageConverter(objectMapper);
         Map<String, Object> claims = authorization.getAccessToken().getClaims();
         OAuth2AccessTokenResponse sendAccessTokenResponse = OAuth2EndpointUtils.sendAccessTokenResponse(authorization, claims);
-        accessTokenHttpResponseConverter.write(sendAccessTokenResponse, MediaType.APPLICATION_JSON, httpResponse);
+        messageConverter.write(sendAccessTokenResponse, MediaType.APPLICATION_JSON, httpResponse);
     }
 
     /**

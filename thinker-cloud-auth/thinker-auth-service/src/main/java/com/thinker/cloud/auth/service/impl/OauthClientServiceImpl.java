@@ -1,15 +1,20 @@
 package com.thinker.cloud.auth.service.impl;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thinker.cloud.auth.api.model.dto.OauthClientDTO;
 import com.thinker.cloud.auth.api.model.query.OauthClientQuery;
 import com.thinker.cloud.auth.api.model.vo.OauthClientVO;
+import com.thinker.cloud.auth.config.OauthClientInitRunner.OauthClientRefreshEvent;
 import com.thinker.cloud.auth.converter.OauthClientConverter;
 import com.thinker.cloud.auth.mapper.OauthClientMapper;
 import com.thinker.cloud.auth.model.entity.OauthClient;
 import com.thinker.cloud.auth.service.IOauthClientService;
 import com.thinker.cloud.core.exception.FailException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +27,10 @@ import java.util.Optional;
  * @since 2024-10-10 10:58:49
  */
 @Service
+@RequiredArgsConstructor
 public class OauthClientServiceImpl extends ServiceImpl<OauthClientMapper, OauthClient> implements IOauthClientService {
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<OauthClientVO> page(IPage<OauthClientVO> page, OauthClientQuery query) {
@@ -50,15 +58,21 @@ public class OauthClientServiceImpl extends ServiceImpl<OauthClientMapper, Oauth
     }
 
     @Override
-    public OauthClientVO loadClientByClientId(String clientId) {
-        return baseMapper.selectByClientId(clientId);
+    public OauthClientVO findByClientId(String clientId) {
+        return baseMapper.findByClientId(clientId);
     }
 
     @Override
     public Boolean saveData(OauthClientDTO dto) {
         // 转换数据并保存
         OauthClient entity = OauthClientConverter.INSTANTS.toEntity(dto);
-        return super.save(entity);
+        entity.setClientKey(Base64.encode(StrUtil.format("{}:{}", entity.getClientId(), entity.getClientSecret())));
+        boolean result = super.save(entity);
+        dto.setId(entity.getId());
+
+        // 刷新缓存
+        eventPublisher.publishEvent(new OauthClientRefreshEvent(entity.getId()));
+        return result;
     }
 
     @Override
@@ -69,7 +83,12 @@ public class OauthClientServiceImpl extends ServiceImpl<OauthClientMapper, Oauth
 
         // 转换数据并更新
         OauthClient entity = OauthClientConverter.INSTANTS.toEntity(dto);
-        return super.updateById(entity);
+        entity.setClientKey(Base64.encode(StrUtil.format("{}:{}", entity.getClientId(), entity.getClientSecret())));
+        boolean result = super.updateById(entity);
+
+        // 刷新缓存
+        eventPublisher.publishEvent(new OauthClientRefreshEvent(entity.getId()));
+        return result;
     }
 
     @Override
@@ -79,6 +98,10 @@ public class OauthClientServiceImpl extends ServiceImpl<OauthClientMapper, Oauth
         Optional.ofNullable(oldEntity).orElseThrow(() -> new FailException("操作失败，数据不存在"));
 
         // 删除数据
-        return super.removeById(id);
+        boolean result = super.removeById(id);
+
+        // 刷新缓存
+        eventPublisher.publishEvent(new OauthClientRefreshEvent(id));
+        return result;
     }
 }

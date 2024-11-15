@@ -1,7 +1,8 @@
-package com.thinker.cloud.auth.core.support;
+package com.thinker.cloud.auth.core.support.base;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.util.Assert;
@@ -18,14 +19,14 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public abstract class AbstractAuthenticationToken extends org.springframework.security.authentication.AbstractAuthenticationToken {
+public abstract class BaseAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;
     private final AuthorizationGrantType grantType;
     private Set<String> scopes = Collections.emptySet();
     private Map<String, Object> additionalParameters = Collections.emptyMap();
 
-    public AbstractAuthenticationToken(AuthorizationGrantType grantType, Object principal) {
+    public BaseAuthenticationToken(AuthorizationGrantType grantType, Object principal) {
         super(Collections.emptyList());
         Assert.notNull(grantType, "grantType cannot be null");
         Assert.notNull(principal, "principal cannot be null");
@@ -33,8 +34,8 @@ public abstract class AbstractAuthenticationToken extends org.springframework.se
         this.principal = principal;
     }
 
-    public AbstractAuthenticationToken(AuthorizationGrantType grantType, Object principal,
-                                       Collection<? extends GrantedAuthority> authorities) {
+    public BaseAuthenticationToken(AuthorizationGrantType grantType, Object principal,
+                                   Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         Assert.notNull(grantType, "grantType cannot be null");
         Assert.notNull(principal, "principal cannot be null");

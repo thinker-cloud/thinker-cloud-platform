@@ -76,6 +76,9 @@
 	<logger name="io.netty" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
+	<logger name="druid.sql" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
 	<logger name="org.apache" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>

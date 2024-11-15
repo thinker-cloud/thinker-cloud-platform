@@ -1,9 +1,7 @@
 package com.thinker.cloud.upms.uac.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.security.credential.CredentialTemplate;
-import com.thinker.cloud.security.credential.model.CredentialValid;
+import com.thinker.cloud.db.dynamic.datasource.annotation.Slave;
 import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
@@ -22,26 +20,22 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SmsAuthLoginHandler extends AbstractAuthLoginHandler {
 
-    private final CredentialTemplate credentialTemplate;
-
     @Override
     protected LoginTypeEnum getAuthType() {
         return LoginTypeEnum.SMS;
     }
 
+    @Slave
     @Override
     public AuthUserDetail getAuthUser(AuthParams authParam) {
-        // 检查验证码是否正确
-        CredentialValid validation = new CredentialValid()
-                .setSubject(authParam.getSubject())
-                .setCredential(authParam.getCredential());
-        if (!credentialTemplate.validate(validation)) {
-            throw FailException.of("验证码错误");
-        }
-
-        // 根据登录手机号获取用户
         SysUser sysUser = userService.getOne(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getPhone, authParam.getSubject()));
         return super.getAuthUser(sysUser);
+    }
+
+    @Slave
+    @Override
+    public AuthUserDetail getMemberUser(AuthParams authParam) {
+        return null;
     }
 }

@@ -1,13 +1,12 @@
 package com.thinker.cloud.auth.core.listener;
 
-import com.thinker.cloud.core.utils.WebUtil;
-import com.thinker.cloud.security.handler.AuthenticationFailureHandler;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,11 +14,10 @@ import org.springframework.stereotype.Component;
  *
  * @author admin
  */
+@Slf4j
 @Component
 @AllArgsConstructor
 public class AuthenticationFailureEventListener implements ApplicationListener<AbstractAuthenticationFailureEvent> {
-
-    private final AuthenticationFailureHandler failureHandler;
 
     /**
      * Handle an application event.
@@ -28,13 +26,8 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
      */
     @Override
     public void onApplicationEvent(@NonNull AbstractAuthenticationFailureEvent event) {
-        // 调用自定义业务实现
-        if (failureHandler != null) {
-            WebUtil.getRequest().ifPresent(request -> {
-                HttpServletResponse response = WebUtil.getResponse();
-                Authentication authentication = (Authentication) event.getSource();
-                failureHandler.handle(event.getException(), authentication, request, response);
-            });
-        }
+        AuthenticationException e = event.getException();
+        Authentication authentication = event.getAuthentication();
+        log.error("用户：{} 登录失败事件监听，异常：{}", authentication.getName(), e.getLocalizedMessage());
     }
 }

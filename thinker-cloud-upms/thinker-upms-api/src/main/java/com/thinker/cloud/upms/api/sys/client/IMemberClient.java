@@ -5,19 +5,19 @@ import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 
 /**
- * 用户对外API相关接口
+ * 会员对外API相关接口
  *
  * @author admin
  **/
-public interface IUserClient {
+public interface IMemberClient {
 
     /**
-     * 根据认证参数获取后台用户信息
+     * 根据认证参数获取会员用户信息
      *
      * @param params params
      * @return AuthUser
      */
     @Inner
-    AuthUserDetail getAuthUser(AuthParams params);
+    AuthUserDetail getMemberUser(AuthParams params);
 
 }

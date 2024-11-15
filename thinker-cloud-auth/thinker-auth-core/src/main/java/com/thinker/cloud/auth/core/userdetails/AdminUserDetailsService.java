@@ -4,7 +4,6 @@ import com.thinker.cloud.core.constants.CommonConstants;
 import com.thinker.cloud.security.constants.SecurityConstants;
 import com.thinker.cloud.security.userdetail.AuthUser;
 import com.thinker.cloud.upms.api.sys.client.IUserClient;
-import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import com.thinker.cloud.upms.api.uac.enums.UserTypeEnum;
 import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
@@ -36,12 +35,7 @@ public class AdminUserDetailsService implements BaseUserDetailsService {
     private final IUserClient userClient;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return this.loadAuthUser(new AuthParams(LoginTypeEnum.PASSWORD, username, null));
-    }
-
-    @Override
-    public UserDetails loadAuthUser(AuthParams authParams) {
+    public UserDetails loadUserByAuthParams(AuthParams authParams) {
         AuthUserDetail authUser = userClient.getAuthUser(authParams);
         return this.getUserDetails(authUser);
     }

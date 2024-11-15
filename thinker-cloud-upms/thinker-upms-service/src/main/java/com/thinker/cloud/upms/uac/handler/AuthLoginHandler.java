@@ -15,7 +15,15 @@ public interface AuthLoginHandler {
      * 获取系统认证用户
      *
      * @param authParam 认证参数
-     * @return AuthUser
+     * @return AuthUserDetail
      */
     AuthUserDetail getAuthUser(AuthParams authParam);
+
+    /**
+     * 获取会员认证用户
+     *
+     * @param authParam 认证参数
+     * @return AuthUserDetail
+     */
+    AuthUserDetail getMemberUser(AuthParams authParam);
 }

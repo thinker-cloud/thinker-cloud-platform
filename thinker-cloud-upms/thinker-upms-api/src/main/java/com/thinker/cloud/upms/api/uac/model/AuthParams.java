@@ -39,7 +39,6 @@ public class AuthParams implements Serializable {
     /**
      * 认证凭证
      */
-    @NotBlank(message = "认证凭证不能为空")
     private String credential;
 
     public AuthParams(LoginTypeEnum authType, String subject, String credential) {

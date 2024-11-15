@@ -31,4 +31,9 @@ public class PasswordAuthLoginHandler extends AbstractAuthLoginHandler {
         return super.getAuthUser(sysUser);
     }
 
+    @Slave
+    @Override
+    public AuthUserDetail getMemberUser(AuthParams authParam) {
+        return null;
+    }
 }

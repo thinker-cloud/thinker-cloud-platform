@@ -3,7 +3,9 @@ package com.thinker.cloud.auth.converter;
 import com.thinker.cloud.auth.api.model.dto.OauthClientDTO;
 import com.thinker.cloud.auth.api.model.vo.OauthClientVO;
 import com.thinker.cloud.auth.model.entity.OauthClient;
+import com.thinker.cloud.security.repository.entity.RedisRegisteredClient;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -45,6 +47,15 @@ public interface OauthClientConverter {
     OauthClientDTO toDTO(OauthClient entity);
 
     /**
+     * entity to Repository
+     *
+     * @param entity entity
+     * @return RedisRegisteredClient
+     */
+    @Mapping(target = "id", expression = "java(String.valueOf(entity.getId()))")
+    RedisRegisteredClient toRepository(OauthClient entity);
+
+    /**
      * list DTO to entity
      *
      * @param list list
@@ -67,4 +78,12 @@ public interface OauthClientConverter {
      * @return List<OauthClient>
      */
     List<OauthClientDTO> listToDTO(List<OauthClient> list);
+
+    /**
+     * list entity to Repository
+     *
+     * @param list list
+     * @return List<RedisRegisteredClient>
+     */
+    List<RedisRegisteredClient> listToRepository(List<OauthClient> list);
 }

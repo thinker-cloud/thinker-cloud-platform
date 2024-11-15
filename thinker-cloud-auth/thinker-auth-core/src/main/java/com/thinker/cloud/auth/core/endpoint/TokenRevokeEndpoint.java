@@ -4,12 +4,12 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thinker.cloud.auth.api.model.vo.AccessTokenVO;
-import com.thinker.cloud.auth.api.model.vo.OauthClientVO;
-import com.thinker.cloud.auth.core.service.IOauthClientRepository;
-import com.thinker.cloud.auth.core.service.OauthTokenDealService;
+import com.thinker.cloud.auth.core.service.Oauth2TokenEndpointService;
 import com.thinker.cloud.core.model.Result;
 import com.thinker.cloud.security.annotation.Inner;
 import com.thinker.cloud.security.exception.OAuthClientException;
+import com.thinker.cloud.security.repository.RedisOauthClientRepository;
+import com.thinker.cloud.security.repository.entity.RedisRegisteredClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -38,8 +38,8 @@ import java.util.Set;
 @RequestMapping("/token")
 public class TokenRevokeEndpoint {
 
-    private final OauthTokenDealService oauthTokenDealService;
-    private final IOauthClientRepository oauthClientRepository;
+    private final RedisOauthClientRepository redisOauthClientRepository;
+    private final Oauth2TokenEndpointService oauth2TokenEndpointService;
 
     /**
      * 认证页面
@@ -69,10 +69,11 @@ public class TokenRevokeEndpoint {
                                 @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId,
                                 @RequestParam(OAuth2ParameterNames.STATE) String state) {
         // 获取客户端信息
-        OauthClientVO oauthClientVO = oauthClientRepository.loadClientByClientId(clientId);
-        Optional.ofNullable(oauthClientVO).orElseThrow(() -> new OAuthClientException("clientId 不合法"));
+        Optional<RedisRegisteredClient> registeredClientOpt = redisOauthClientRepository.findByClientId(clientId);
+        registeredClientOpt.orElseThrow(() -> new OAuthClientException("clientId 不合法"));
 
-        Set<String> authorizedScopes = StringUtils.commaDelimitedListToSet(oauthClientVO.getScope());
+        RedisRegisteredClient registeredClient = registeredClientOpt.get();
+        Set<String> authorizedScopes = StringUtils.commaDelimitedListToSet(registeredClient.getScopes());
         modelAndView.addObject("clientId", clientId);
         modelAndView.addObject("state", state);
         modelAndView.addObject("scopeList", authorizedScopes);
@@ -104,7 +105,7 @@ public class TokenRevokeEndpoint {
     @SneakyThrows
     @GetMapping("/check_token")
     public void checkToken(String token, HttpServletRequest request, HttpServletResponse response) {
-        oauthTokenDealService.checkToken(token, request, response);
+        oauth2TokenEndpointService.checkToken(token, request, response);
     }
 
     /**
@@ -115,7 +116,7 @@ public class TokenRevokeEndpoint {
     @Inner
     @DeleteMapping("/remove/{token}")
     public Result<Boolean> removeToken(@PathVariable("token") String token) {
-        oauthTokenDealService.removeToken(token);
+        oauth2TokenEndpointService.removeToken(token);
         return Result.success();
     }
 
@@ -132,6 +133,6 @@ public class TokenRevokeEndpoint {
         Integer size = MapUtil.getInt(params, "size");
         Object username = params.get("username");
         Page<AccessTokenVO> page = new Page<>(current, size);
-        return Result.success(oauthTokenDealService.tokenPage(page, username));
+        return Result.success(oauth2TokenEndpointService.tokenPage(page, username));
     }
 }

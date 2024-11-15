@@ -43,11 +43,6 @@ public class SysUser extends TenantEntity implements Serializable {
     private String password;
 
     /**
-     * 密码盐
-     */
-    private String salt;
-
-    /**
      * 姓名
      */
     private String name;

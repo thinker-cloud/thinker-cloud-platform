@@ -76,6 +76,9 @@
 	<logger name="io.netty" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
+	<logger name="druid.sql" level="ERROR" additivity="false">
+		<appender-ref ref="error"/>
+	</logger>
 	<logger name="org.apache" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
@@ -100,7 +103,7 @@
 	<logger name="org.hibernate.validator" level="ERROR" additivity="false">
 		<appender-ref ref="error"/>
 	</logger>
-	<logger name="org.springframework.web.client" level="ERROR" additivity="false">
+	<logger name="org.springframework.web" level="TRACE" additivity="false">
 		<appender-ref ref="debug"/>
 	</logger>
 	<logger name="org.springframework.data.convert" level="ERROR" additivity="false">

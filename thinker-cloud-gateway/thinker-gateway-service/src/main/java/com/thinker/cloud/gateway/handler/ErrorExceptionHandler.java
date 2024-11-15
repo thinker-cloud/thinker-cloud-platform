@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -61,12 +62,17 @@ public class ErrorExceptionHandler implements ErrorWebExceptionHandler {
         Integer code = Optional.ofNullable(response.getStatusCode())
                 .map(HttpStatusCode::value)
                 .orElse(ResponseCode.SERVER_FAILURE.getCode());
-        Result<Void> result;
-        if (ResponseCode.NOT_FOUND.getCode().equals(code)) {
-            result = Result.failure(code, ResponseCode.NOT_FOUND.getDesc());
-        } else {
-            result = Result.failure(code, errorMessage);
-        }
+        HttpStatus status = HttpStatus.valueOf(code);
+        ResponseCode responseCode = switch (status) {
+            case OK -> ResponseCode.FAILURE;
+            case BAD_REQUEST -> ResponseCode.BAD_REQUEST;
+            case UNAUTHORIZED -> ResponseCode.UNAUTHORIZED;
+            case NOT_FOUND -> ResponseCode.NOT_FOUND;
+            case SERVICE_UNAVAILABLE -> ResponseCode.UNAVAILABLE;
+            default -> ResponseCode.SERVER_FAILURE;
+        };
+
+        Result<Void> result = Result.failure(responseCode);
         return Mono.just(bufferFactory.wrap(objectMapper.writeValueAsBytes(result)));
     }
 }

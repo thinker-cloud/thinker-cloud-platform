@@ -1,5 +1,6 @@
 package com.thinker.cloud.auth.mapper;
 
+import com.baomidou.mybatisplus.annotation.InterceptorIgnore;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thinker.cloud.auth.api.model.query.OauthClientQuery;
@@ -20,6 +21,15 @@ import java.util.List;
  */
 @Mapper
 public interface OauthClientMapper extends BaseMapper<OauthClient> {
+
+    /**
+     * 查询所有客户端
+     *
+     * @return List<OauthClient>
+     */
+    @Slave
+    @InterceptorIgnore(tenantLine = "true")
+    List<OauthClient> selectAllList();
 
     /**
      * 根据query分页查询
@@ -84,5 +94,5 @@ public interface OauthClientMapper extends BaseMapper<OauthClient> {
      * @return OauthClientVO
      */
     @Slave
-    OauthClientVO selectByClientId(@Param("clientId") String clientId);
+    OauthClientVO findByClientId(@Param("clientId") String clientId);
 }

@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * oauth2客户端配置
@@ -24,14 +25,14 @@ public class OauthClient extends SuperEntity {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 客户端名称
+     */
+    private String name;
+
+    /**
      * 客户端id
      */
     private String clientId;
-
-    /**
-     * 客户端key
-     */
-    private String clientKey;
 
     /**
      * 客户端秘钥
@@ -39,14 +40,9 @@ public class OauthClient extends SuperEntity {
     private String clientSecret;
 
     /**
-     * 授权范围
+     * 客户端key
      */
-    private String scope;
-
-    /**
-     * 授权类型
-     */
-    private String[] grantTypes;
+    private String clientKey;
 
     /**
      * 是否启用 0.禁用 1.启用
@@ -54,9 +50,34 @@ public class OauthClient extends SuperEntity {
     private Boolean enabled;
 
     /**
+     * 授权范围
+     */
+    private String scopes;
+
+    /**
+     * 认证方式
+     */
+    private String methods;
+
+    /**
+     * 授权类型
+     */
+    private String grantTypes;
+
+    /**
      * 回调跳转URL
      */
-    private String redirectUri;
+    private String redirectUris;
+
+    /**
+     * 登出回调地址
+     */
+    private String logoutRedirectUris;
+
+    /**
+     * 客户端秘钥过期时间
+     */
+    private LocalDateTime expiresAt;
 
     /**
      * 访问令牌有效期（秒）
@@ -71,7 +92,7 @@ public class OauthClient extends SuperEntity {
     /**
      * 前端密码加密
      */
-    private Boolean isEncoder;
+    private Boolean isEncode;
 
     /**
      * 验证码开关

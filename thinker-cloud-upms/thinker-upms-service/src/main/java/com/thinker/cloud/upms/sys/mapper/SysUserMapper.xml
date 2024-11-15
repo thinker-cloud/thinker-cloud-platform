@@ -11,12 +11,6 @@
 			<if test="query.username != null and query.username != ''">
 				and base.username like concat('%',#{query.username},'%')
 			</if>
-			<if test="query.password != null and query.password != ''">
-				and base.password like concat('%',#{query.password},'%')
-			</if>
-			<if test="query.salt != null and query.salt != ''">
-				and base.salt like concat('%',#{query.salt},'%')
-			</if>
 			<if test="query.name != null and query.name != ''">
 				and base.name like concat('%',#{query.name},'%')
 			</if>

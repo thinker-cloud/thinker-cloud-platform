@@ -1,10 +1,9 @@
 package com.thinker.cloud.upms;
 
+import com.thinker.cloud.sentinel.annotation.SpringCloudApplication;
 import com.thinker.cloud.security.annotation.EnableResourceServer;
-import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 用户权限管理中心
@@ -12,10 +11,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @author xfy
  * @since 2024-09-19 17:52
  **/
-@DubboService
+@EnableDubbo
 @EnableResourceServer
-@EnableDiscoveryClient
-@SpringBootApplication
+@SpringCloudApplication
 public class ThinkerUpmsApplication {
 
     public static void main(String[] args) {

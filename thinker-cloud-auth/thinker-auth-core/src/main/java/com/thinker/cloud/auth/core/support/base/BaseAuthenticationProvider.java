@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.core.support;
+package com.thinker.cloud.auth.core.support.base;
 
 import com.google.common.collect.Maps;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
@@ -9,6 +9,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -21,7 +22,6 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthExtendUtils;
 import org.springframework.security.oauth2.server.authorization.context.AuthorizationServerContextHolder;
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
@@ -38,7 +38,7 @@ import java.util.*;
  * @author admin
  */
 @Slf4j
-public abstract class AbstractAuthenticationProvider<T extends AbstractAuthenticationToken> implements AuthenticationProvider {
+public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationToken> implements AuthenticationProvider {
 
     private final OAuth2AuthorizationService authorizationService;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
@@ -48,8 +48,8 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
     private static final OAuth2TokenType ID_TOKEN_TOKEN_TYPE = new OAuth2TokenType(OidcParameterNames.ID_TOKEN);
 
 
-    public AbstractAuthenticationProvider(OAuth2AuthorizationService authorizationService,
-                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+    public BaseAuthenticationProvider(OAuth2AuthorizationService authorizationService,
+                                      OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authorizationService = authorizationService;
@@ -59,22 +59,17 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        AbstractAuthenticationToken authenticationToken = (AbstractAuthenticationToken) authentication;
+        BaseAuthenticationToken authenticationToken = (BaseAuthenticationToken) authentication;
 
-        OAuth2ClientAuthenticationToken clientPrincipal = OAuth2AuthExtendUtils
-                .getAuthenticatedClientElseThrowInvalidClient(authenticationToken);
+        // 获取客户端信息
+        OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClient(authenticationToken);
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
-        if (Objects.isNull(registeredClient)) {
-            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR
-                    , "注册客户端不能为空", ""));
-        }
 
         try {
-            // 登录验证逻辑
-            T principal = this.authenticationToken(authentication);
-
-            principal.setScopes(getAuthorizedScopes(authenticationToken, registeredClient));
+            // 登录授权验证身份主体逻辑
+            BaseAuthenticationToken principal = this.authenticationPrincipal(authentication);
             principal.setDetails(authenticationToken.getDetails());
+            principal.setScopes(getAuthorizedScopes(authenticationToken, registeredClient));
             principal.setAdditionalParameters(authenticationToken.getAdditionalParameters());
 
             // @formatter:off
@@ -88,7 +83,7 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
 
             // @formatter:on
             OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
-                    .withRegisteredClient(registeredClient)
+                    .withRegisteredClient(Objects.requireNonNull(registeredClient))
                     .principalName(principal.getName())
                     .attribute(Principal.class.getName(), principal)
                     .authorizedScopes(principal.getScopes())
@@ -112,21 +107,21 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
                 additionalParameters.put(OidcParameterNames.ID_TOKEN, idToken.getTokenValue());
             }
 
-            return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal,
-                    accessToken, refreshToken, additionalParameters);
+            return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal
+                    , accessToken, refreshToken, additionalParameters);
         } catch (Exception e) {
             log.error("problem in authenticate ex: {}", e.getMessage(), e);
-            throw oAuth2AuthenticationException(authentication, (AuthenticationException) e);
+            throw oAuth2AuthenticationException((AuthenticationException) e);
         }
     }
 
     /**
-     * 创建身份验证令牌对象
+     * 登录授权验证身份主体逻辑
      *
      * @param authentication authentication
      * @return T
      */
-    public abstract T authenticationToken(Authentication authentication);
+    public abstract T authenticationPrincipal(Authentication authentication);
 
     /**
      * 生成 AccessToken
@@ -219,7 +214,7 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
      * @param registeredClient    registeredClient
      * @return Set<String>
      */
-    private static Set<String> getAuthorizedScopes(AbstractAuthenticationToken authenticationToken,
+    private static Set<String> getAuthorizedScopes(BaseAuthenticationToken authenticationToken,
                                                    RegisteredClient registeredClient) {
         // Default to configured scopes
         if (CollectionUtils.isEmpty(authenticationToken.getScopes())) {
@@ -243,55 +238,90 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
     /**
      * 登录异常转换为oauth2异常
      *
-     * @param authentication          身份验证
      * @param authenticationException 身份验证异常
      * @return {@link OAuth2AuthenticationException}
      */
-    private OAuth2AuthenticationException oAuth2AuthenticationException(Authentication authentication,
-                                                                        AuthenticationException authenticationException) {
+    private OAuth2AuthenticationException oAuth2AuthenticationException(AuthenticationException authenticationException) {
         if (authenticationException instanceof UsernameNotFoundException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USERNAME_NOT_FOUND
-                    , messages.getMessage("JdbcDaoImpl.notFound"
-                    , new Object[]{authentication.getName()}
-                    , "Username {0} not found"), ""));
+                    , messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials"
+                    , "Bad credentials"), ""));
         }
 
         if (authenticationException instanceof BadCredentialsException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.BAD_CREDENTIALS
-                    , this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials"
+                    , messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials"
                     , "Bad credentials"), ""));
         }
 
         if (authenticationException instanceof LockedException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_LOCKED
-                    , this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked"
+                    , messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked"
                     , "User account is locked"), ""));
         }
 
         if (authenticationException instanceof DisabledException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_DISABLE
-                    , this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled"
+                    , messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled"
                     , "User is disabled"), ""));
         }
 
         if (authenticationException instanceof AccountExpiredException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_EXPIRED
-                    , this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired"
+                    , messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired"
                     , "User account has expired"), ""));
         }
 
         if (authenticationException instanceof CredentialsExpiredException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.CREDENTIALS_EXPIRED,
-                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired"
+                    messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired"
                             , "User credentials have expired"), ""));
         }
 
         if (authenticationException instanceof ScopeException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_SCOPE
-                    , this.messages.getMessage("AbstractAccessDecisionManager.accessDenied"
+                    , messages.getMessage("AbstractAccessDecisionManager.accessDenied"
                     , "invalid_scope"), ""));
         }
 
-        return new OAuth2AuthenticationException(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR);
+        return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR
+                , messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials"), ""));
+    }
+
+    /**
+     * 获取客户端信息
+     *
+     * @param authenticationToken authenticationToken
+     * @return OAuth2ClientAuthenticationToken
+     */
+    private static OAuth2ClientAuthenticationToken getAuthenticatedClient(BaseAuthenticationToken authenticationToken) {
+        OAuth2ClientAuthenticationToken clientPrincipal = getClientPrincipal();
+        RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
+        if (Objects.isNull(registeredClient)) {
+            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
+        }
+
+        // 检查客户端是否支持此授权模式
+        if (!registeredClient.getAuthorizationGrantTypes().contains(authenticationToken.getGrantType())) {
+            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
+        }
+        return clientPrincipal;
+    }
+
+    /**
+     * 获取客户端信息
+     *
+     * @return OAuth2ClientAuthenticationToken
+     */
+    private static OAuth2ClientAuthenticationToken getClientPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication) || !(authentication instanceof OAuth2ClientAuthenticationToken clientPrincipal)) {
+            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
+        }
+
+        if (!clientPrincipal.isAuthenticated()) {
+            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
+        }
+        return clientPrincipal;
     }
 }

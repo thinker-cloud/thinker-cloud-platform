@@ -1,11 +1,8 @@
 package com.thinker.cloud.auth.core.listener;
 
-import cn.hutool.core.collection.CollUtil;
-import com.thinker.cloud.core.utils.WebUtil;
-import com.thinker.cloud.security.handler.AuthenticationSuccessHandler;
 import com.thinker.cloud.security.userdetail.AuthUser;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -16,11 +13,10 @@ import org.springframework.stereotype.Component;
  *
  * @author admin
  */
+@Slf4j
 @Component
 @AllArgsConstructor
 public class AuthenticationSuccessEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
-
-    private final AuthenticationSuccessHandler successHandler;
 
     /**
      * Handle an application event.
@@ -30,16 +26,8 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         Authentication authentication = (Authentication) event.getSource();
-        if (successHandler != null && this.isUserAuthentication(authentication)) {
-            WebUtil.getRequest().ifPresent(request -> {
-                HttpServletResponse response = WebUtil.getResponse();
-                successHandler.handle(authentication, request, response);
-            });
+        if (authentication.getPrincipal() instanceof AuthUser) {
+            log.info("用户：{} 登录成功事件监听", authentication.getName());
         }
-    }
-
-    private boolean isUserAuthentication(Authentication authentication) {
-        return authentication.getPrincipal() instanceof AuthUser
-                || CollUtil.isNotEmpty(authentication.getAuthorities());
     }
 }

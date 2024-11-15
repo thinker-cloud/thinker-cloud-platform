@@ -26,17 +26,22 @@ dubbo:
   scan:
     base-packages:
       - com.thinker.cloud
+  protocol:
+    name: dubbo
+    port: -1
   # 服务名
   application:
     name: ${spring.application.name}
+    # 检查模式 STRICT 严格检查，WARN 告警，DISABLE 禁用
+    serialize-check-status: WARN
   # 服务注册
   registry:
+    group: DUBBO_GROUP
     register-mode: instance
     username: ${spring.cloud.nacos.username}
     password: ${spring.cloud.nacos.password}
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
-    parameters:
-      -namespace: ${spring.cloud.nacos.config.namespace}
+    parameters.namespace: ${spring.cloud.nacos.discovery.namespace}
   # 关闭消费者依赖服务启动检查
   consumer:
     check: false
