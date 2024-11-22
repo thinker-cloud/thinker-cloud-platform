@@ -1,8 +1,9 @@
 package com.thinker.cloud.auth.core.support.sms;
 
-import com.thinker.cloud.auth.core.support.base.BaseAuthenticationProvider;
+import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationProvider;
 import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
+import com.thinker.cloud.security.model.AuthParams;
+import com.thinker.cloud.security.token.SmsAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +17,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
  * @author admin
  **/
 @Slf4j
-public class SmsAuthenticationProvider extends BaseAuthenticationProvider<SmsAuthenticationToken> {
+public class SmsAuthenticationProvider extends AbstractAuthenticationProvider<SmsAuthenticationToken> {
 
     private final BaseUserDetailsService userDetailsService;
 
@@ -29,7 +30,6 @@ public class SmsAuthenticationProvider extends BaseAuthenticationProvider<SmsAut
 
     @Override
     public SmsAuthenticationToken authenticationPrincipal(Authentication authentication) {
-        SmsAuthenticationToken authenticationToken = (SmsAuthenticationToken) authentication;
         AuthParams authParams = (AuthParams) authentication.getPrincipal();
         UserDetails userDetails = userDetailsService.loadUserByAuthParams(authParams);
 
@@ -37,7 +37,7 @@ public class SmsAuthenticationProvider extends BaseAuthenticationProvider<SmsAut
         super.accountStatusChecker.check(userDetails);
 
         // 构建验证身份主体
-        return new SmsAuthenticationToken(authenticationToken.getGrantType(), userDetails);
+        return new SmsAuthenticationToken(userDetails);
     }
 
     @Override

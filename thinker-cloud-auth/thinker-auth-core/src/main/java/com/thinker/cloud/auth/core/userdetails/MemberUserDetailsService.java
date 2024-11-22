@@ -1,7 +1,7 @@
 package com.thinker.cloud.auth.core.userdetails;
 
+import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.upms.api.sys.client.IMemberClient;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import lombok.AllArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboReference;

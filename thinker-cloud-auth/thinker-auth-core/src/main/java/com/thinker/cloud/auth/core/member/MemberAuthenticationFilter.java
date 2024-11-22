@@ -1,4 +1,4 @@
-package com.thinker.cloud.auth.core.support.member;
+package com.thinker.cloud.auth.core.member;
 
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationConverter;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationConverter;
@@ -14,10 +14,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.authorization.web.authentication.ClientSecretBasicAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -47,20 +47,20 @@ public class MemberAuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationFailureHandler authenticationFailureHandler;
     private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
-    public MemberAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this(authenticationManager, SecurityConstants.MEMBER_TOKEN_URL);
+    public MemberAuthenticationFilter(HttpSecurity httpSecurity) {
+        this(httpSecurity, SecurityConstants.MEMBER_TOKEN_URL);
     }
 
-    public MemberAuthenticationFilter(AuthenticationManager authenticationManager, String authorizationEndpointUri) {
-        Assert.notNull(authenticationManager, "authenticationManager cannot be null");
+    public MemberAuthenticationFilter(HttpSecurity httpSecurity, String authorizationEndpointUri) {
+        Assert.notNull(httpSecurity, "httpSecurity cannot be null");
         Assert.hasText(authorizationEndpointUri, "authorizationEndpointUri cannot be empty");
-
+        AuthenticationManager authenticationManager = httpSecurity.getSharedObject(AuthenticationManager.class);
+        Assert.notNull(authenticationManager, "authenticationManager cannot be null");
         this.authenticationManager = authenticationManager;
         this.authorizationEndpointMatcher = new AntPathRequestMatcher(authorizationEndpointUri, HttpMethod.POST.name());
 
         // @formatter:off
         this.authenticationConverter = new DelegatingAuthenticationConverter(Arrays.asList(
-                        new ClientSecretBasicAuthenticationConverter(),
                         new PasswordAuthenticationConverter(),
                         new SmsAuthenticationConverter()));
         // @formatter:on
@@ -69,19 +69,19 @@ public class MemberAuthenticationFilter extends OncePerRequestFilter {
     @Override
     @SneakyThrows
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) {
-        if (!this.authorizationEndpointMatcher.matches(request)) {
+        if (!authorizationEndpointMatcher.matches(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            Authentication authentication = this.authenticationConverter.convert(request);
+            Authentication authentication = authenticationConverter.convert(request);
             if (authentication instanceof AbstractAuthenticationToken) {
                 ((AbstractAuthenticationToken) authentication)
-                        .setDetails(this.authenticationDetailsSource.buildDetails(request));
+                        .setDetails(authenticationDetailsSource.buildDetails(request));
             }
 
-            Authentication authenticationResult = this.authenticationManager.authenticate(authentication);
+            Authentication authenticationResult = authenticationManager.authenticate(authentication);
             if (!authenticationResult.isAuthenticated()) {
                 filterChain.doFilter(request, response);
                 return;

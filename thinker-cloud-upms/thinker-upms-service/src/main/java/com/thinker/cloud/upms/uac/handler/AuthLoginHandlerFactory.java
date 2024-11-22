@@ -1,7 +1,7 @@
 package com.thinker.cloud.upms.uac.handler;
 
 import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
+import com.thinker.cloud.security.enums.LoginTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

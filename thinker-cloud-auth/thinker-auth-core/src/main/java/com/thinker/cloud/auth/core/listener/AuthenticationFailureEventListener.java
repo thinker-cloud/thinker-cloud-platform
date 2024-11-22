@@ -28,6 +28,6 @@ public class AuthenticationFailureEventListener implements ApplicationListener<A
     public void onApplicationEvent(@NonNull AbstractAuthenticationFailureEvent event) {
         AuthenticationException e = event.getException();
         Authentication authentication = event.getAuthentication();
-        log.error("用户：{} 登录失败事件监听，异常：{}", authentication.getName(), e.getLocalizedMessage());
+        log.error("用户：{} 认证失败事件监听，异常：{}", authentication.getName(), e.getLocalizedMessage());
     }
 }

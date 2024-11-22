@@ -2,8 +2,8 @@ package com.thinker.cloud.upms.uac.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thinker.cloud.db.dynamic.datasource.annotation.Slave;
-import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
+import com.thinker.cloud.security.enums.LoginTypeEnum;
+import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import com.thinker.cloud.upms.sys.model.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;

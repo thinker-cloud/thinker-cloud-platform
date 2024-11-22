@@ -1,7 +1,7 @@
 package com.thinker.cloud.upms.sys.client;
 
+import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.upms.api.sys.client.IMemberClient;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import com.thinker.cloud.upms.uac.handler.AuthLoginHandlerFactory;
 import lombok.AllArgsConstructor;

@@ -1,11 +1,10 @@
-package com.thinker.cloud.auth.core.support.member;
+package com.thinker.cloud.auth.core.member;
 
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationProvider;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationProvider;
 import com.thinker.cloud.auth.core.userdetails.MemberUserDetailsService;
 import com.thinker.cloud.security.repository.RedisRegisteredClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,8 +42,7 @@ public class MemberSecurityConfigurer extends AbstractHttpConfigurer<MemberSecur
 
     @Override
     public void configure(HttpSecurity http) {
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        MemberAuthenticationFilter memberAuthenticationFilter = new MemberAuthenticationFilter(authenticationManager);
+        MemberAuthenticationFilter memberAuthenticationFilter = new MemberAuthenticationFilter(http);
         memberAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         memberAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         http.addFilterAfter(memberAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -56,6 +54,7 @@ public class MemberSecurityConfigurer extends AbstractHttpConfigurer<MemberSecur
      * @param http http
      */
     private void initDefaultAuthenticationProviders(HttpSecurity http) {
+
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2AuthExtendUtils.getTokenGenerator(http);
 
         // 客户端

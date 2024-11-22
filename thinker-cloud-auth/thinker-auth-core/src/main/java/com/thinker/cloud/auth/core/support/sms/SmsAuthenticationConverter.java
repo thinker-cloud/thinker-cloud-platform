@@ -1,8 +1,9 @@
 package com.thinker.cloud.auth.core.support.sms;
 
-import com.thinker.cloud.auth.core.support.base.BaseAuthenticationConverter;
+import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationConverter;
+import com.thinker.cloud.security.model.AuthParams;
+import com.thinker.cloud.security.token.SmsAuthenticationToken;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import org.springframework.util.MultiValueMap;
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.util.MultiValueMap;
  *
  * @author admin
  **/
-public class SmsAuthenticationConverter extends BaseAuthenticationConverter<SmsAuthenticationToken> {
+public class SmsAuthenticationConverter extends AbstractAuthenticationConverter<SmsAuthenticationToken> {
 
     @Override
     public String getGrantType() {

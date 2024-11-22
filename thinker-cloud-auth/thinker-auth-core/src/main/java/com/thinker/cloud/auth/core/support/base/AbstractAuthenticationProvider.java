@@ -1,9 +1,13 @@
 package com.thinker.cloud.auth.core.support.base;
 
 import com.google.common.collect.Maps;
+import com.thinker.cloud.core.constants.CommonConstants;
+import com.thinker.cloud.core.exception.AbstractException;
+import com.thinker.cloud.core.utils.tenant.TenantContextHolder;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
 import com.thinker.cloud.security.exception.ScopeException;
 import com.thinker.cloud.security.utils.SecurityMessageSourceUtils;
+import com.thinker.cloud.security.token.AbstractAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
@@ -38,7 +42,7 @@ import java.util.*;
  * @author admin
  */
 @Slf4j
-public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationToken> implements AuthenticationProvider {
+public abstract class AbstractAuthenticationProvider<T extends AbstractAuthenticationToken> implements AuthenticationProvider {
 
     private final OAuth2AuthorizationService authorizationService;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
@@ -48,8 +52,8 @@ public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationTok
     private static final OAuth2TokenType ID_TOKEN_TOKEN_TYPE = new OAuth2TokenType(OidcParameterNames.ID_TOKEN);
 
 
-    public BaseAuthenticationProvider(OAuth2AuthorizationService authorizationService,
-                                      OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+    public AbstractAuthenticationProvider(OAuth2AuthorizationService authorizationService,
+                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authorizationService = authorizationService;
@@ -59,15 +63,21 @@ public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationTok
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        BaseAuthenticationToken authenticationToken = (BaseAuthenticationToken) authentication;
+        AbstractAuthenticationToken authenticationToken = (AbstractAuthenticationToken) authentication;
 
         // 获取客户端信息
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClient(authenticationToken);
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
+        Assert.notNull(registeredClient, "Registered client cannot be null");
 
         try {
+            // 设置租户id
+            Optional.ofNullable(registeredClient.getClientSettings())
+                    .map(client -> client.getSetting(CommonConstants.TENANT))
+                    .ifPresent(tenantId -> TenantContextHolder.setTenantId((Long) tenantId));
+
             // 登录授权验证身份主体逻辑
-            BaseAuthenticationToken principal = this.authenticationPrincipal(authentication);
+            AbstractAuthenticationToken principal = this.authenticationPrincipal(authentication);
             principal.setDetails(authenticationToken.getDetails());
             principal.setScopes(getAuthorizedScopes(authenticationToken, registeredClient));
             principal.setAdditionalParameters(authenticationToken.getAdditionalParameters());
@@ -109,8 +119,13 @@ public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationTok
 
             return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal
                     , accessToken, refreshToken, additionalParameters);
+        } catch (AbstractException e) {
+            TenantContextHolder.clear();
+            log.error("[{}]登录授权发生业务异常 ex: {}", authenticationToken.getGrantType().getValue(), e.getMessage());
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USERNAME_NOT_FOUND, e.getMessage(), ""));
         } catch (Exception e) {
-            log.error("problem in authenticate ex: {}", e.getMessage(), e);
+            TenantContextHolder.clear();
+            log.error("[{}]登录授权发生未知异常 ex: {}", authenticationToken.getGrantType().getValue(), e.getMessage(), e);
             throw oAuth2AuthenticationException((AuthenticationException) e);
         }
     }
@@ -214,7 +229,7 @@ public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationTok
      * @param registeredClient    registeredClient
      * @return Set<String>
      */
-    private static Set<String> getAuthorizedScopes(BaseAuthenticationToken authenticationToken,
+    private static Set<String> getAuthorizedScopes(AbstractAuthenticationToken authenticationToken,
                                                    RegisteredClient registeredClient) {
         // Default to configured scopes
         if (CollectionUtils.isEmpty(authenticationToken.getScopes())) {
@@ -294,7 +309,7 @@ public abstract class BaseAuthenticationProvider<T extends BaseAuthenticationTok
      * @param authenticationToken authenticationToken
      * @return OAuth2ClientAuthenticationToken
      */
-    private static OAuth2ClientAuthenticationToken getAuthenticatedClient(BaseAuthenticationToken authenticationToken) {
+    private static OAuth2ClientAuthenticationToken getAuthenticatedClient(AbstractAuthenticationToken authenticationToken) {
         OAuth2ClientAuthenticationToken clientPrincipal = getClientPrincipal();
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
         if (Objects.isNull(registeredClient)) {

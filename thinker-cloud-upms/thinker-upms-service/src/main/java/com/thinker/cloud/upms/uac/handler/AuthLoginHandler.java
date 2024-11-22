@@ -1,7 +1,7 @@
 package com.thinker.cloud.upms.uac.handler;
 
 
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
+import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 
 /**

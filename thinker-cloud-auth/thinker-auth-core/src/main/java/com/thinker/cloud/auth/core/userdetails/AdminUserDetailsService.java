@@ -2,10 +2,10 @@ package com.thinker.cloud.auth.core.userdetails;
 
 import com.thinker.cloud.core.constants.CommonConstants;
 import com.thinker.cloud.security.constants.SecurityConstants;
-import com.thinker.cloud.security.userdetail.AuthUser;
+import com.thinker.cloud.security.model.AuthParams;
+import com.thinker.cloud.security.model.AuthUser;
 import com.thinker.cloud.upms.api.sys.client.IUserClient;
 import com.thinker.cloud.upms.api.uac.enums.UserTypeEnum;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +13,10 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * PC用户统一授权接口实现
@@ -47,6 +45,8 @@ public class AdminUserDetailsService implements BaseUserDetailsService {
      * @return UserDetails
      */
     private UserDetails getUserDetails(AuthUserDetail userDetail) {
+        Optional.ofNullable(userDetail).orElseThrow(() -> new UsernameNotFoundException("账号不存在"));
+
         Set<String> authsSet = new HashSet<>();
 
         // 关联角色

@@ -1,15 +1,15 @@
 package com.thinker.cloud.upms.uac.handler;
 
 
-import com.thinker.cloud.core.exception.FailException;
+import com.thinker.cloud.security.enums.LoginTypeEnum;
 import com.thinker.cloud.upms.api.sys.model.vo.AuthorizeVO;
-import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
 import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import com.thinker.cloud.upms.sys.converter.SysUserConverter;
 import com.thinker.cloud.upms.sys.model.entity.SysUser;
 import com.thinker.cloud.upms.sys.service.ISysUserService;
 import jakarta.annotation.Resource;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,7 +26,10 @@ public abstract class AbstractAuthLoginHandler implements AuthLoginHandler {
      * 获取用户授权信息
      */
     protected AuthUserDetail getAuthUser(SysUser sysUser) {
-        Optional.ofNullable(sysUser).orElseThrow(() -> FailException.of("不存在该用户"));
+        if (Objects.isNull(sysUser)) {
+            return null;
+        }
+
         AuthUserDetail authUser = SysUserConverter.INSTANTS.toAuth(sysUser);
 
         // 设置角色、菜单、数据权限列表

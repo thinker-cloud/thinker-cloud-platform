@@ -1,6 +1,6 @@
 package com.thinker.cloud.auth.core.listener;
 
-import com.thinker.cloud.security.userdetail.AuthUser;
+import com.thinker.cloud.security.model.AuthUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -27,7 +27,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         Authentication authentication = (Authentication) event.getSource();
         if (authentication.getPrincipal() instanceof AuthUser) {
-            log.info("用户：{} 登录成功事件监听", authentication.getName());
+            log.info("用户：{} 认证成功事件监听", authentication.getName());
         }
     }
 }

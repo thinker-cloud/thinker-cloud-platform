@@ -1,7 +1,7 @@
 package com.thinker.cloud.auth.core.userdetails;
 
-import com.thinker.cloud.upms.api.uac.enums.LoginTypeEnum;
-import com.thinker.cloud.upms.api.uac.model.AuthParams;
+import com.thinker.cloud.security.enums.LoginTypeEnum;
+import com.thinker.cloud.security.model.AuthParams;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

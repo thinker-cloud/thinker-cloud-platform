@@ -1,16 +1,17 @@
 package com.thinker.cloud.auth.core.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.TemporalAccessorUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinker.cloud.auth.api.model.vo.AccessTokenVO;
+import com.thinker.cloud.auth.core.converters.AccessTokenResponseHttpMessageConverter;
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationFailureHandler;
 import com.thinker.cloud.core.resolver.KeyStrResolver;
 import com.thinker.cloud.core.utils.ListUtil;
 import com.thinker.cloud.core.utils.spring.SpringContextHolder;
-import com.thinker.cloud.security.component.AccessTokenResponseHttpMessageConverter;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
 import com.thinker.cloud.security.constants.SecurityConstants;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
@@ -123,7 +124,7 @@ public class Oauth2TokenEndpointService {
         String key = StrUtil.format("{}:{}"
                 , SecurityConstants.TOKEN_PREFIX, OAuth2ParameterNames.ACCESS_TOKEN);
         Set<String> allKeys = redisTemplate.keys(key);
-        if (Objects.isNull(allKeys)) {
+        if (CollectionUtil.isEmpty(allKeys)) {
             page.setTotal(0);
             page.setRecords(Collections.emptyList());
             return page;

@@ -42,6 +42,7 @@ dubbo:
     password: ${spring.cloud.nacos.password}
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
     parameters.namespace: ${spring.cloud.nacos.discovery.namespace}
+#    parameters.register-consumer-url: true
   # 关闭消费者依赖服务启动检查
   consumer:
     check: false

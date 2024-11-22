@@ -1,6 +1,7 @@
 package com.thinker.cloud.auth.core.support.password;
 
-import com.thinker.cloud.auth.core.support.base.BaseAuthenticationConverter;
+import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationConverter;
+import com.thinker.cloud.security.token.PasswordAuthenticationToken;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.MultiValueMap;
@@ -10,7 +11,7 @@ import org.springframework.util.MultiValueMap;
  *
  * @author admin
  **/
-public class PasswordAuthenticationConverter extends BaseAuthenticationConverter<PasswordAuthenticationToken> {
+public class PasswordAuthenticationConverter extends AbstractAuthenticationConverter<PasswordAuthenticationToken> {
 
     @Override
     public String getGrantType() {

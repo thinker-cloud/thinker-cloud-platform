@@ -1,7 +1,8 @@
 package com.thinker.cloud.auth.core.support.password;
 
-import com.thinker.cloud.auth.core.support.base.BaseAuthenticationProvider;
+import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationProvider;
 import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
+import com.thinker.cloud.security.token.PasswordAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
  * @author admin
  **/
 @Slf4j
-public class PasswordAuthenticationProvider extends BaseAuthenticationProvider<PasswordAuthenticationToken> {
+public class PasswordAuthenticationProvider extends AbstractAuthenticationProvider<PasswordAuthenticationToken> {
 
     private final PasswordEncoder passwordEncoder;
     private final BaseUserDetailsService userDetailsService;
@@ -48,7 +49,7 @@ public class PasswordAuthenticationProvider extends BaseAuthenticationProvider<P
         }
 
         // 构建验证身份主体
-        return new PasswordAuthenticationToken(authenticationToken.getGrantType(), userDetails);
+        return new PasswordAuthenticationToken(userDetails);
     }
 
     @Override
