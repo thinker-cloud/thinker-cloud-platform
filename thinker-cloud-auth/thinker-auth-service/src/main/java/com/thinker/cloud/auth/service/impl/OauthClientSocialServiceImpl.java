@@ -9,7 +9,7 @@ import com.thinker.cloud.auth.converter.OauthClientSocialConverter;
 import com.thinker.cloud.auth.mapper.OauthClientSocialMapper;
 import com.thinker.cloud.auth.model.entity.OauthClientSocial;
 import com.thinker.cloud.auth.service.IOauthClientSocialService;
-import com.thinker.cloud.core.exception.FailException;
+import com.thinker.cloud.common.exception.FailException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

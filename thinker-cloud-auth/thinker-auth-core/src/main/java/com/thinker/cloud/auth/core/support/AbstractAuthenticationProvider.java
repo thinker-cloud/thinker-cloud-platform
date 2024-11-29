@@ -1,13 +1,14 @@
-package com.thinker.cloud.auth.core.support.base;
+package com.thinker.cloud.auth.core.support;
 
 import com.google.common.collect.Maps;
-import com.thinker.cloud.core.constants.CommonConstants;
-import com.thinker.cloud.core.exception.AbstractException;
+import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
+import com.thinker.cloud.common.constants.CommonConstants;
+import com.thinker.cloud.common.exception.AbstractException;
 import com.thinker.cloud.core.utils.tenant.TenantContextHolder;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
 import com.thinker.cloud.security.exception.ScopeException;
-import com.thinker.cloud.security.utils.SecurityMessageSourceUtils;
 import com.thinker.cloud.security.token.AbstractAuthenticationToken;
+import com.thinker.cloud.security.utils.SecurityMessageSourceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
@@ -99,6 +100,10 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
                     .authorizedScopes(principal.getScopes())
                     .authorizationGrantType(authenticationToken.getGrantType());
 
+            // 客户端授权类型
+            Object clientAuth = authenticationToken.getParameters(CommonConstants.AUTH_TYPE_HEADER);
+            Optional.ofNullable(clientAuth).ifPresent(var -> authorizationBuilder.attribute(CommonConstants.AUTH_TYPE_HEADER, var));
+
             // ----- Access token -----
             OAuth2AccessToken accessToken = this.genAccessToken(tokenContextBuilder, authorizationBuilder);
 
@@ -137,6 +142,21 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
      * @return T
      */
     public abstract T authenticationPrincipal(Authentication authentication);
+
+    /**
+     * 获取用户统一授权服务
+     *
+     * @return BaseUserDetailsService
+     */
+    protected BaseUserDetailsService getUserDetailsService(T authentication) {
+        Object clientAuth = authentication.getParameters(CommonConstants.AUTH_TYPE_HEADER);
+
+
+
+        return null;
+    }
+
+    ;
 
     /**
      * 生成 AccessToken

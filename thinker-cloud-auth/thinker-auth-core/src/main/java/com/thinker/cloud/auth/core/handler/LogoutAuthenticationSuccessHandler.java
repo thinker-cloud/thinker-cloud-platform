@@ -3,7 +3,7 @@ package com.thinker.cloud.auth.core.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.thinker.cloud.core.constants.CommonConstants;
+import com.thinker.cloud.common.constants.CommonConstants;
 import com.thinker.cloud.core.model.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

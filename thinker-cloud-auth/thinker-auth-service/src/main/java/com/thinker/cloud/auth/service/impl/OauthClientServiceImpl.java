@@ -12,7 +12,7 @@ import com.thinker.cloud.auth.converter.OauthClientConverter;
 import com.thinker.cloud.auth.mapper.OauthClientMapper;
 import com.thinker.cloud.auth.model.entity.OauthClient;
 import com.thinker.cloud.auth.service.IOauthClientService;
-import com.thinker.cloud.core.exception.FailException;
+import com.thinker.cloud.common.exception.FailException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

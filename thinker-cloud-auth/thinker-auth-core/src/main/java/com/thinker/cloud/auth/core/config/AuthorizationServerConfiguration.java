@@ -2,14 +2,12 @@ package com.thinker.cloud.auth.core.config;
 
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationFailureHandler;
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationSuccessHandler;
-import com.thinker.cloud.auth.core.member.MemberSecurityConfigurer;
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationConverter;
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationProvider;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationConverter;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationProvider;
-import com.thinker.cloud.auth.core.userdetails.AdminUserDetailsService;
 import com.thinker.cloud.security.component.*;
-import com.thinker.cloud.security.properties.ThinkerSecurityProperties;
+import com.thinker.cloud.security.properties.SecurityProperties;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +27,9 @@ import org.springframework.security.oauth2.server.authorization.token.Delegating
 import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
+import org.springframework.security.web.authentication.DelegatingAuthenticationConverter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,13 +45,10 @@ import java.util.function.Consumer;
 public class AuthorizationServerConfiguration {
 
     private final PasswordEncoder passwordEncoder;
-    private final AdminUserDetailsService adminUserDetailsService;
-    private final MemberSecurityConfigurer memberSecurityConfigurer;
-
+    private final SecurityProperties securityProperties;
     private final PermitAllUrlMatcher permitAllUrlMatcher;
     private final BearerTokenExtractor bearerTokenExtractor;
     private final AuthAccessDeniedHandler authAccessDeniedHandler;
-    private final ThinkerSecurityProperties thinkerSecurityProperties;
     private final Oauth2AuthExceptionEntryPoint authExceptionEntryPoint;
     private final AuthorizationServiceIntrospector authorizationServiceIntrospector;
 
@@ -66,7 +61,6 @@ public class AuthorizationServerConfiguration {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
-        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2AuthExtendUtils.getTokenGenerator(http);
 
         // 授权配置
         return http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
@@ -84,11 +78,8 @@ public class AuthorizationServerConfiguration {
                         .tokenEndpoint(tokenEndpoint -> tokenEndpoint
                                 // 自定义授权认证转换器
                                 .accessTokenRequestConverter(this.createAccessTokenRequestConverter())
-                                // 自定义授权认证类型提供者
-                                .authenticationProvider(new PasswordAuthenticationProvider(passwordEncoder
-                                        , adminUserDetailsService, authorizationService, tokenGenerator))
-                                .authenticationProvider(new SmsAuthenticationProvider(adminUserDetailsService
-                                        , authorizationService, tokenGenerator))
+                                // 自定义授权认证模式
+                                .authenticationProviders(this.createAuthenticationProviders(http))
                                 // 登录成功处理器
                                 .accessTokenResponseHandler(authenticationSuccessEventHandler)
                                 // 登录失败处理器
@@ -105,7 +96,7 @@ public class AuthorizationServerConfiguration {
                                 .errorResponseHandler(authenticationFailureEvenHandler))
                         // 授权服务信息配置
                         .authorizationServerSettings(AuthorizationServerSettings.builder()
-                                .issuer(thinkerSecurityProperties.getIssuer()).build())
+                                .issuer(securityProperties.getIssuer()).build())
                         // 存储token的实现
                         .authorizationService(authorizationService), Customizer.withDefaults())
                 .exceptionHandling(handler -> handler
@@ -113,7 +104,6 @@ public class AuthorizationServerConfiguration {
                         .accessDeniedHandler(authAccessDeniedHandler)
                         // 身份验证入口点
                         .authenticationEntryPoint(authExceptionEntryPoint))
-//                .with(memberSecurityConfigurer, Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
@@ -151,13 +141,13 @@ public class AuthorizationServerConfiguration {
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2AuthExtendUtils.getTokenGenerator(http);
         return providers -> {
             // 账号密码
-            PasswordAuthenticationProvider passwordAuthenticationProvider = new PasswordAuthenticationProvider(passwordEncoder
-                    , adminUserDetailsService, authorizationService, tokenGenerator);
+            PasswordAuthenticationProvider passwordAuthenticationProvider =
+                    new PasswordAuthenticationProvider(passwordEncoder, authorizationService, tokenGenerator);
             providers.add(passwordAuthenticationProvider);
 
             // 手机短信
-            SmsAuthenticationProvider smsAuthenticationProvider = new SmsAuthenticationProvider(adminUserDetailsService
-                    , authorizationService, tokenGenerator);
+            SmsAuthenticationProvider smsAuthenticationProvider =
+                    new SmsAuthenticationProvider(authorizationService, tokenGenerator);
             providers.add(smsAuthenticationProvider);
         };
     }

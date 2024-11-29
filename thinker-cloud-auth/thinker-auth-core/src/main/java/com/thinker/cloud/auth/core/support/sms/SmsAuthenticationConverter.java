@@ -1,6 +1,6 @@
 package com.thinker.cloud.auth.core.support.sms;
 
-import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationConverter;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationConverter;
 import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.security.token.SmsAuthenticationToken;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;

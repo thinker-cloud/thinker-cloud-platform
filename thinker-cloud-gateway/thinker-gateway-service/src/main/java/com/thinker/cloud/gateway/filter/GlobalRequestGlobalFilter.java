@@ -16,7 +16,7 @@
 
 package com.thinker.cloud.gateway.filter;
 
-import com.thinker.cloud.core.constants.CommonConstants;
+import com.thinker.cloud.common.constants.CommonConstants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -50,9 +50,10 @@ public class GlobalRequestGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // 1. 清洗请求头中from 参数
-        ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders -> {
+        ServerHttpRequest request = exchange.getRequest();
+        request.mutate().headers(httpHeaders -> {
             httpHeaders.remove(CommonConstants.FROM);
-        }).build();
+        });
 
         addOriginalRequestUrl(exchange, request.getURI());
         return chain.filter(exchange);

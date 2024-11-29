@@ -2,8 +2,8 @@ package com.thinker.cloud.upms.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thinker.cloud.core.constants.CommonConstants;
-import com.thinker.cloud.core.exception.FailException;
+import com.thinker.cloud.common.constants.CommonConstants;
+import com.thinker.cloud.common.exception.FailException;
 import com.thinker.cloud.upms.api.sys.model.dto.SysOrganizationDTO;
 import com.thinker.cloud.upms.api.sys.model.query.SysOrganizationQuery;
 import com.thinker.cloud.upms.api.sys.model.vo.SysOrganizationVO;

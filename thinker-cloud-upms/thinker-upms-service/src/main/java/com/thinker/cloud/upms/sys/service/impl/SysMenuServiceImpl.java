@@ -2,8 +2,8 @@ package com.thinker.cloud.upms.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.core.utils.ListUtil;
+import com.thinker.cloud.common.exception.FailException;
+import com.thinker.cloud.common.utils.ListUtil;
 import com.thinker.cloud.upms.api.sys.model.dto.SysMenuDTO;
 import com.thinker.cloud.upms.api.sys.model.query.SysMenuQuery;
 import com.thinker.cloud.upms.api.sys.model.query.SysRoleMenuQuery;

@@ -1,7 +1,9 @@
-package com.thinker.cloud.auth.core.support.base;
+package com.thinker.cloud.auth.core.support;
 
 import cn.hutool.core.util.StrUtil;
+import com.thinker.cloud.common.constants.CommonConstants;
 import com.thinker.cloud.security.token.AbstractAuthenticationToken;
+import com.thinker.cloud.security.utils.AuthUtils;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractAuthenticationConverter<T extends AbstractAuthenticationToken> implements AuthenticationConverter {
 
     protected static final String PARAM_SUBJECT_NAME = "subject";
-    protected static final String PARAM_CREDENTIAL_NAME = "credential";
 
     @Override
     public Authentication convert(HttpServletRequest request) {
@@ -48,7 +49,12 @@ public abstract class AbstractAuthenticationConverter<T extends AbstractAuthenti
         // 创建 Authentication Token
         AbstractAuthenticationToken authentication = this.buildAuthenticationToken(parameters);
         authentication.setScopes(getRequestScopes(parameters));
-        authentication.setAdditionalParameters(getAdditionalParameters(parameters));
+
+        // 客户端认证类型
+        String clientAuthType = AuthUtils.getAuthType(request);
+        Map<String, Object> additionalParameters = getAdditionalParameters(parameters);
+        additionalParameters.put(CommonConstants.AUTH_TYPE_HEADER, clientAuthType);
+        authentication.setAdditionalParameters(additionalParameters);
         return authentication;
     }
 

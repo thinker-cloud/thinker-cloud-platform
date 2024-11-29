@@ -2,7 +2,7 @@ package com.thinker.cloud.auth.core.member;
 
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationConverter;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationConverter;
-import com.thinker.cloud.security.constants.SecurityConstants;
+import com.thinker.cloud.common.enums.AuthTypeEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.authorization.web.OAuth2ClientAuthenticationFilter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -48,7 +49,7 @@ public class MemberAuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
     public MemberAuthenticationFilter(HttpSecurity httpSecurity) {
-        this(httpSecurity, SecurityConstants.MEMBER_TOKEN_URL);
+        this(httpSecurity, AuthTypeEnum.MEMBER.getPath());
     }
 
     public MemberAuthenticationFilter(HttpSecurity httpSecurity, String authorizationEndpointUri) {
@@ -58,6 +59,8 @@ public class MemberAuthenticationFilter extends OncePerRequestFilter {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
         this.authenticationManager = authenticationManager;
         this.authorizationEndpointMatcher = new AntPathRequestMatcher(authorizationEndpointUri, HttpMethod.POST.name());
+
+        OAuth2ClientAuthenticationFilter filter = httpSecurity.getSharedObject(OAuth2ClientAuthenticationFilter.class);
 
         // @formatter:off
         this.authenticationConverter = new DelegatingAuthenticationConverter(Arrays.asList(

@@ -65,12 +65,11 @@ public class MemberSecurityConfigurer extends AbstractHttpConfigurer<MemberSecur
 
         // 账号密码
         PasswordAuthenticationProvider passwordAuthenticationProvider = new PasswordAuthenticationProvider(passwordEncoder
-                , memberUserDetailsService, authorizationService, tokenGenerator);
+                , authorizationService, tokenGenerator);
         http.authenticationProvider(passwordAuthenticationProvider);
 
         // 手机短信
-        SmsAuthenticationProvider smsAuthenticationProvider = new SmsAuthenticationProvider(
-                memberUserDetailsService, authorizationService, tokenGenerator);
+        SmsAuthenticationProvider smsAuthenticationProvider = new SmsAuthenticationProvider(authorizationService, tokenGenerator);
         http.authenticationProvider(smsAuthenticationProvider);
     }
 }

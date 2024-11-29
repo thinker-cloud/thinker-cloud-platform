@@ -2,8 +2,8 @@ package com.thinker.cloud.upms.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thinker.cloud.core.exception.FailException;
-import com.thinker.cloud.core.utils.ListUtil;
+import com.thinker.cloud.common.exception.FailException;
+import com.thinker.cloud.common.utils.ListUtil;
 import com.thinker.cloud.db.enums.DataScopeTypeEnum;
 import com.thinker.cloud.upms.api.sys.model.dto.SysUserDTO;
 import com.thinker.cloud.upms.api.sys.model.query.SysUserQuery;

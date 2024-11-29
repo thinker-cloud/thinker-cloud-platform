@@ -1,6 +1,6 @@
 package com.thinker.cloud.auth.core.support.sms;
 
-import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationProvider;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationProvider;
 import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
 import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.security.token.SmsAuthenticationToken;
@@ -19,18 +19,18 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 @Slf4j
 public class SmsAuthenticationProvider extends AbstractAuthenticationProvider<SmsAuthenticationToken> {
 
-    private final BaseUserDetailsService userDetailsService;
-
-    public SmsAuthenticationProvider(BaseUserDetailsService userDetailsService,
-                                     OAuth2AuthorizationService authorizationService,
+    public SmsAuthenticationProvider(OAuth2AuthorizationService authorizationService,
                                      OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         super(authorizationService, tokenGenerator);
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public SmsAuthenticationToken authenticationPrincipal(Authentication authentication) {
-        AuthParams authParams = (AuthParams) authentication.getPrincipal();
+        SmsAuthenticationToken authenticationToken = (SmsAuthenticationToken) authentication;
+        BaseUserDetailsService userDetailsService = super.getUserDetailsService(authenticationToken);
+
+        // 获取登录用户信息
+        AuthParams authParams = (AuthParams) authenticationToken.getPrincipal();
         UserDetails userDetails = userDetailsService.loadUserByAuthParams(authParams);
 
         // 检查账号状态

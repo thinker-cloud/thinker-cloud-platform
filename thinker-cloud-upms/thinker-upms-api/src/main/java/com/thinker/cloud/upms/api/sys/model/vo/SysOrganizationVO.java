@@ -1,6 +1,6 @@
 package com.thinker.cloud.upms.api.sys.model.vo;
 
-import com.thinker.cloud.core.utils.tree.TreeNode;
+import com.thinker.cloud.common.utils.tree.TreeNode;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

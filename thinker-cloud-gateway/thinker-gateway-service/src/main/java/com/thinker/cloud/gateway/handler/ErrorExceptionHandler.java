@@ -1,7 +1,7 @@
 package com.thinker.cloud.gateway.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thinker.cloud.core.enums.ResponseCode;
+import com.thinker.cloud.common.enums.ResponseCode;
 import com.thinker.cloud.core.model.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

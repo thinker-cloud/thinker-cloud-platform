@@ -1,6 +1,6 @@
 package com.thinker.cloud.auth.core.support.password;
 
-import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationProvider;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationProvider;
 import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
 import com.thinker.cloud.security.token.PasswordAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +21,20 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 public class PasswordAuthenticationProvider extends AbstractAuthenticationProvider<PasswordAuthenticationToken> {
 
     private final PasswordEncoder passwordEncoder;
-    private final BaseUserDetailsService userDetailsService;
 
     public PasswordAuthenticationProvider(PasswordEncoder passwordEncoder,
-                                          BaseUserDetailsService userDetailsService,
                                           OAuth2AuthorizationService authorizationService,
                                           OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         super(authorizationService, tokenGenerator);
         this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public PasswordAuthenticationToken authenticationPrincipal(Authentication authentication) {
         PasswordAuthenticationToken authenticationToken = (PasswordAuthenticationToken) authentication;
+        BaseUserDetailsService userDetailsService = super.getUserDetailsService(authenticationToken);
+
+        // 获取登录用户信息
         String username = (String) authentication.getPrincipal();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 

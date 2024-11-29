@@ -1,6 +1,6 @@
 package com.thinker.cloud.auth.core.support.password;
 
-import com.thinker.cloud.auth.core.support.base.AbstractAuthenticationConverter;
+import com.thinker.cloud.auth.core.support.AbstractAuthenticationConverter;
 import com.thinker.cloud.security.token.PasswordAuthenticationToken;
 import com.thinker.cloud.security.utils.OAuth2EndpointUtils;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
