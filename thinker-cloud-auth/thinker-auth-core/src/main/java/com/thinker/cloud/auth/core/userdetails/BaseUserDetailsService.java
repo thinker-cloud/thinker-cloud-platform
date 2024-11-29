@@ -1,5 +1,6 @@
 package com.thinker.cloud.auth.core.userdetails;
 
+import com.thinker.cloud.common.enums.AuthTypeEnum;
 import com.thinker.cloud.security.enums.LoginTypeEnum;
 import com.thinker.cloud.security.model.AuthParams;
 import org.springframework.core.Ordered;
@@ -23,6 +24,13 @@ public interface BaseUserDetailsService extends UserDetailsService, Ordered {
     default UserDetails loadUserByUsername(String username) {
         return this.loadUserByAuthParams(new AuthParams(LoginTypeEnum.PASSWORD, username, null));
     }
+
+    /**
+     * 获取授权认证类型
+     *
+     * @return AuthTypeEnum
+     */
+    AuthTypeEnum getAuthType();
 
     /**
      * 根据授权参数获取认证主体信息

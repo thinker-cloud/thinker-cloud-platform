@@ -6,6 +6,7 @@ import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationConver
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationProvider;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationConverter;
 import com.thinker.cloud.auth.core.support.sms.SmsAuthenticationProvider;
+import com.thinker.cloud.auth.core.userdetails.UserDetailsServiceFactory;
 import com.thinker.cloud.security.component.*;
 import com.thinker.cloud.security.properties.SecurityProperties;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,7 @@ public class AuthorizationServerConfiguration {
     private final PermitAllUrlMatcher permitAllUrlMatcher;
     private final BearerTokenExtractor bearerTokenExtractor;
     private final AuthAccessDeniedHandler authAccessDeniedHandler;
+    private final UserDetailsServiceFactory userDetailsServiceFactory;
     private final Oauth2AuthExceptionEntryPoint authExceptionEntryPoint;
     private final AuthorizationServiceIntrospector authorizationServiceIntrospector;
 
@@ -141,13 +143,13 @@ public class AuthorizationServerConfiguration {
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2AuthExtendUtils.getTokenGenerator(http);
         return providers -> {
             // 账号密码
-            PasswordAuthenticationProvider passwordAuthenticationProvider =
-                    new PasswordAuthenticationProvider(passwordEncoder, authorizationService, tokenGenerator);
+            PasswordAuthenticationProvider passwordAuthenticationProvider = new PasswordAuthenticationProvider(passwordEncoder
+                    , authorizationService, userDetailsServiceFactory, tokenGenerator);
             providers.add(passwordAuthenticationProvider);
 
             // 手机短信
-            SmsAuthenticationProvider smsAuthenticationProvider =
-                    new SmsAuthenticationProvider(authorizationService, tokenGenerator);
+            SmsAuthenticationProvider smsAuthenticationProvider = new SmsAuthenticationProvider(authorizationService
+                    , userDetailsServiceFactory, tokenGenerator);
             providers.add(smsAuthenticationProvider);
         };
     }

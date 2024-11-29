@@ -1,6 +1,7 @@
 package com.thinker.cloud.auth.core.userdetails;
 
 import com.thinker.cloud.common.constants.CommonConstants;
+import com.thinker.cloud.common.enums.AuthTypeEnum;
 import com.thinker.cloud.security.constants.SecurityConstants;
 import com.thinker.cloud.security.model.AuthParams;
 import com.thinker.cloud.security.model.AuthUser;
@@ -31,6 +32,11 @@ public class AdminUserDetailsService implements BaseUserDetailsService {
 
     @DubboReference
     private final IUserClient userClient;
+
+    @Override
+    public AuthTypeEnum getAuthType() {
+        return AuthTypeEnum.ADMIN;
+    }
 
     @Override
     public UserDetails loadUserByAuthParams(AuthParams authParams) {

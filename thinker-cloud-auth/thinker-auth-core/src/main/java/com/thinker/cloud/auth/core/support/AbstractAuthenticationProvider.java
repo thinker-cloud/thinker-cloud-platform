@@ -1,7 +1,7 @@
 package com.thinker.cloud.auth.core.support;
 
 import com.google.common.collect.Maps;
-import com.thinker.cloud.auth.core.userdetails.BaseUserDetailsService;
+import com.thinker.cloud.auth.core.userdetails.UserDetailsServiceFactory;
 import com.thinker.cloud.common.constants.CommonConstants;
 import com.thinker.cloud.common.exception.AbstractException;
 import com.thinker.cloud.core.utils.tenant.TenantContextHolder;
@@ -46,6 +46,7 @@ import java.util.*;
 public abstract class AbstractAuthenticationProvider<T extends AbstractAuthenticationToken> implements AuthenticationProvider {
 
     private final OAuth2AuthorizationService authorizationService;
+    protected final UserDetailsServiceFactory userDetailsServiceFactory;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
 
     protected final MessageSourceAccessor messages = SecurityMessageSourceUtils.getAccessor();
@@ -54,10 +55,13 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
 
 
     public AbstractAuthenticationProvider(OAuth2AuthorizationService authorizationService,
+                                          UserDetailsServiceFactory userDetailsServiceFactory,
                                           OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
+        Assert.notNull(userDetailsServiceFactory, "authUserDetailsFactory cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authorizationService = authorizationService;
+        this.userDetailsServiceFactory = userDetailsServiceFactory;
         this.tokenGenerator = tokenGenerator;
         this.accountStatusChecker.setMessageSource(new SecurityMessageSourceUtils());
     }
@@ -142,21 +146,6 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
      * @return T
      */
     public abstract T authenticationPrincipal(Authentication authentication);
-
-    /**
-     * 获取用户统一授权服务
-     *
-     * @return BaseUserDetailsService
-     */
-    protected BaseUserDetailsService getUserDetailsService(T authentication) {
-        Object clientAuth = authentication.getParameters(CommonConstants.AUTH_TYPE_HEADER);
-
-
-
-        return null;
-    }
-
-    ;
 
     /**
      * 生成 AccessToken
