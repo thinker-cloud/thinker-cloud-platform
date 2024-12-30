@@ -47,7 +47,6 @@ public class AuthorizationServerConfiguration {
 
     private final PasswordEncoder passwordEncoder;
     private final SecurityProperties securityProperties;
-    private final PermitAllUrlMatcher permitAllUrlMatcher;
     private final BearerTokenExtractor bearerTokenExtractor;
     private final AuthAccessDeniedHandler authAccessDeniedHandler;
     private final UserDetailsServiceFactory userDetailsServiceFactory;
@@ -65,12 +64,7 @@ public class AuthorizationServerConfiguration {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
         // 授权配置
-        return http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(permitAllUrlMatcher)
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2
+        return http.oauth2ResourceServer(oauth2 -> oauth2
                         .opaqueToken(token -> token.introspector(authorizationServiceIntrospector))
                         // 身份验证入口点
                         .authenticationEntryPoint(authExceptionEntryPoint)
@@ -144,12 +138,12 @@ public class AuthorizationServerConfiguration {
         return providers -> {
             // 账号密码
             PasswordAuthenticationProvider passwordAuthenticationProvider = new PasswordAuthenticationProvider(passwordEncoder
-                    , authorizationService, userDetailsServiceFactory, tokenGenerator);
+                    , authorizationService, tokenGenerator, userDetailsServiceFactory);
             providers.add(passwordAuthenticationProvider);
 
             // 手机短信
             SmsAuthenticationProvider smsAuthenticationProvider = new SmsAuthenticationProvider(authorizationService
-                    , userDetailsServiceFactory, tokenGenerator);
+                    , tokenGenerator, userDetailsServiceFactory);
             providers.add(smsAuthenticationProvider);
         };
     }

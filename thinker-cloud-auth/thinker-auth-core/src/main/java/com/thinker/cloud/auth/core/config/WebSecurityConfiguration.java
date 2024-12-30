@@ -2,10 +2,10 @@ package com.thinker.cloud.auth.core.config;
 
 import com.thinker.cloud.auth.core.handler.FormAuthenticationFailureHandler;
 import com.thinker.cloud.auth.core.handler.LogoutAuthenticationSuccessHandler;
+import com.thinker.cloud.security.component.PermitAllUrlMatcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,10 +23,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
 
+    private final PermitAllUrlMatcher permitAllUrlMatcher;
+
     @Bean
-    @Order(-1)
-    public SecurityFilterChain authorizationServerWebSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(permitAllUrlMatcher)
+                        .permitAll()
                         .requestMatchers("/token/**")
                         .permitAll()
                         .anyRequest()

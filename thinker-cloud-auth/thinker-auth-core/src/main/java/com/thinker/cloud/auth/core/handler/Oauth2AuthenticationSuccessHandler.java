@@ -1,7 +1,7 @@
 package com.thinker.cloud.auth.core.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thinker.cloud.auth.core.converters.AccessTokenResponseHttpMessageConverter;
+import com.thinker.cloud.security.converter.AccessTokenResponseHttpMessageConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

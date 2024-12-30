@@ -9,19 +9,17 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>simple-demo</artifactId>
+	<artifactId>shard-sphere-demo</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>simple-demo</name>
+	<name>shard-sphere-demo</name>
 	<description>Demo project for Spring Boot</description>
+
 	<properties>
 		<java.version>17</java.version>
+		<shardingsphere.version>5.5.1</shardingsphere.version>
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>com.thinker.cloud</groupId>
-			<artifactId>thinker-cloud-redis-starter</artifactId>
-		</dependency>
 
+	<dependencies>
 		<dependency>
 			<groupId>com.thinker.cloud</groupId>
 			<artifactId>thinker-cloud-config</artifactId>
@@ -34,17 +32,23 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.baomidou</groupId>
-			<artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+			<groupId>com.thinker.cloud</groupId>
+			<artifactId>thinker-cloud-db-starter</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>com.thinker.cloud</groupId>
-			<artifactId>thinker-cloud-db-starter</artifactId>
+			<artifactId>thinker-cloud-dynamic-datasource-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shardingsphere</groupId>
+			<artifactId>shardingsphere-jdbc</artifactId>
+			<version>${shardingsphere.version}</version>
 			<exclusions>
 				<exclusion>
-					<groupId>com.thinker.cloud</groupId>
-					<artifactId>thinker-cloud-security-starter</artifactId>
+					<groupId>org.apache.shardingsphere</groupId>
+					<artifactId>shardingsphere-test-util</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -53,18 +57,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-
-		<!-- 监控 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<!-- 监控客户端 -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
 	</dependencies>
 

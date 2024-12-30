@@ -21,9 +21,9 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 public class SmsAuthenticationProvider extends AbstractAuthenticationProvider<SmsAuthenticationToken> {
 
     public SmsAuthenticationProvider(OAuth2AuthorizationService authorizationService,
-                                     UserDetailsServiceFactory userDetailsServiceFactory,
-                                     OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
-        super(authorizationService, userDetailsServiceFactory, tokenGenerator);
+                                     OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator,
+                                     UserDetailsServiceFactory userDetailsServiceFactory) {
+        super(authorizationService, tokenGenerator, userDetailsServiceFactory);
     }
 
     @Override

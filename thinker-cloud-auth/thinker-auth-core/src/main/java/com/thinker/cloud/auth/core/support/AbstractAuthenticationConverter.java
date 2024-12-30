@@ -53,7 +53,7 @@ public abstract class AbstractAuthenticationConverter<T extends AbstractAuthenti
         // 客户端认证类型
         String clientAuthType = AuthUtils.getAuthType(request);
         Map<String, Object> additionalParameters = getAdditionalParameters(parameters);
-        additionalParameters.put(CommonConstants.AUTH_TYPE_HEADER, clientAuthType);
+        additionalParameters.put(CommonConstants.AUTH_TYPE, clientAuthType);
         authentication.setAdditionalParameters(additionalParameters);
         return authentication;
     }

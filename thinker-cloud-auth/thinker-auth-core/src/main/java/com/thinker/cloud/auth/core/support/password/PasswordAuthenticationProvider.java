@@ -25,9 +25,9 @@ public class PasswordAuthenticationProvider extends AbstractAuthenticationProvid
 
     public PasswordAuthenticationProvider(PasswordEncoder passwordEncoder,
                                           OAuth2AuthorizationService authorizationService,
-                                          UserDetailsServiceFactory userDetailsServiceFactory,
-                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
-        super(authorizationService, userDetailsServiceFactory, tokenGenerator);
+                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator,
+                                          UserDetailsServiceFactory userDetailsServiceFactory) {
+        super(authorizationService, tokenGenerator, userDetailsServiceFactory);
         this.passwordEncoder = passwordEncoder;
     }
 

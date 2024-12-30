@@ -7,7 +7,10 @@ import com.thinker.cloud.upms.api.uac.model.AuthUserDetail;
 import lombok.AllArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * 会员用户统一授权接口实现
@@ -30,6 +33,9 @@ public class MemberUserDetailsService implements BaseUserDetailsService {
     @Override
     public UserDetails loadUserByAuthParams(AuthParams authParams) {
         AuthUserDetail memberUser = memberClient.getMemberUser(authParams);
+
+        Optional.ofNullable(memberUser).orElseThrow(() -> new UsernameNotFoundException("账号不存在"));
         return null;
     }
+
 }

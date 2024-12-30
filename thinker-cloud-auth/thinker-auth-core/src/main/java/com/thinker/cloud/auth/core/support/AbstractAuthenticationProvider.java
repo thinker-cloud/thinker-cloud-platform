@@ -46,8 +46,8 @@ import java.util.*;
 public abstract class AbstractAuthenticationProvider<T extends AbstractAuthenticationToken> implements AuthenticationProvider {
 
     private final OAuth2AuthorizationService authorizationService;
-    protected final UserDetailsServiceFactory userDetailsServiceFactory;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
+    protected final UserDetailsServiceFactory userDetailsServiceFactory;
 
     protected final MessageSourceAccessor messages = SecurityMessageSourceUtils.getAccessor();
     protected final AccountStatusUserDetailsChecker accountStatusChecker = new AccountStatusUserDetailsChecker();
@@ -55,14 +55,14 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
 
 
     public AbstractAuthenticationProvider(OAuth2AuthorizationService authorizationService,
-                                          UserDetailsServiceFactory userDetailsServiceFactory,
-                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+                                          OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator,
+                                          UserDetailsServiceFactory userDetailsServiceFactory) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
-        Assert.notNull(userDetailsServiceFactory, "authUserDetailsFactory cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
+        Assert.notNull(userDetailsServiceFactory, "authUserDetailsFactory cannot be null");
         this.authorizationService = authorizationService;
-        this.userDetailsServiceFactory = userDetailsServiceFactory;
         this.tokenGenerator = tokenGenerator;
+        this.userDetailsServiceFactory = userDetailsServiceFactory;
         this.accountStatusChecker.setMessageSource(new SecurityMessageSourceUtils());
     }
 
@@ -105,8 +105,8 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
                     .authorizationGrantType(authenticationToken.getGrantType());
 
             // 客户端授权类型
-            Object clientAuth = authenticationToken.getParameters(CommonConstants.AUTH_TYPE_HEADER);
-            Optional.ofNullable(clientAuth).ifPresent(var -> authorizationBuilder.attribute(CommonConstants.AUTH_TYPE_HEADER, var));
+            Object clientAuth = authenticationToken.getParameters(CommonConstants.AUTH_TYPE);
+            Optional.ofNullable(clientAuth).ifPresent(var -> authorizationBuilder.attribute(CommonConstants.AUTH_TYPE, var));
 
             // ----- Access token -----
             OAuth2AccessToken accessToken = this.genAccessToken(tokenContextBuilder, authorizationBuilder);

@@ -43,8 +43,8 @@ public class UserDetailsServiceFactory {
      * @return BaseUserDetailsService
      */
     public BaseUserDetailsService get(AbstractAuthenticationToken authentication) {
-        Object clientAuth = authentication.getParameters(CommonConstants.AUTH_TYPE_HEADER);
-        AuthTypeEnum resolver = AuthTypeEnum.resolver((String) clientAuth);
+        Object authType = authentication.getParameters(CommonConstants.AUTH_TYPE);
+        AuthTypeEnum resolver = AuthTypeEnum.resolver((String) authType);
         return userDetailsServiceMap.get(resolver);
     }
 }

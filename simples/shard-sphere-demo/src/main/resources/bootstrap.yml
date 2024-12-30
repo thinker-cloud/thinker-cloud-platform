@@ -1,10 +1,8 @@
 server:
-  port: 9801
-  undertow:
-    buffer-size: 1024
+  port: 9802
 
 spring:
   application:
-    name: @artifactId@
+    name: shard-sphere-demo
   profiles:
     active: ${PROFILES_ACTIVE:thinker}
