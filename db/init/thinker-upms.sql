@@ -1,5 +1,18 @@
-DROP DATABASE IF EXISTS `thinker-upms`;
-CREATE DATABASE  `ry-seata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+/*
+ Navicat Premium Dump SQL
+
+ Source Server         : 阿里云服务器
+ Source Server Type    : MySQL
+ Source Server Version : 80036 (8.0.36)
+ Source Host           : 120.77.206.150:13306
+ Source Schema         : thinker-upms
+
+ Target Server Type    : MySQL
+ Target Server Version : 80036 (8.0.36)
+ File Encoding         : 65001
+
+ Date: 13/01/2025 16:10:05
+*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -17,6 +30,7 @@ CREATE TABLE `sys_dict`  (
   `sort` int NOT NULL DEFAULT 0 COMMENT '排序',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
   `extends_info` json NULL COMMENT '扩展信息',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除, 1.已删除',
   `create_by` bigint NOT NULL COMMENT '创建人id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -24,6 +38,10 @@ CREATE TABLE `sys_dict`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公共字典' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_dict
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_dict_biz
@@ -38,6 +56,7 @@ CREATE TABLE `sys_dict_biz`  (
   `sort` int NOT NULL DEFAULT 0 COMMENT '排序',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
   `extends_info` json NULL COMMENT '扩展信息',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除, 1.已删除',
   `tenant_id` bigint NOT NULL COMMENT '租户id',
   `create_by` bigint NOT NULL COMMENT '创建人id',
@@ -46,6 +65,10 @@ CREATE TABLE `sys_dict_biz`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '业务字典' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_dict_biz
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -67,13 +90,18 @@ CREATE TABLE `sys_menu`  (
   `hidden` tinyint(1) NOT NULL COMMENT '是否隐藏 0.否 1.是',
   `keep_alive` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否缓存 0.否 1.是',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
-  `deleted` int NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
+  `version` int NOT NULL COMMENT '版本号',
+  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
   `create_by` bigint NOT NULL COMMENT '创建人id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` bigint NOT NULL COMMENT '修改人id',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单管理' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_menu
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_organization
@@ -83,11 +111,12 @@ CREATE TABLE `sys_organization`  (
   `id` bigint NOT NULL COMMENT '主键',
   `parent_id` bigint NULL DEFAULT NULL COMMENT '父节点id',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-  `code` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '编码',
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
   `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '启用状态 0.禁用 1.启用',
   `sort` int NOT NULL DEFAULT 0 COMMENT '排序',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
-  `deleted` int NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
+  `version` int NOT NULL COMMENT '版本号',
+  `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
   `tenant_id` bigint NOT NULL COMMENT '租户id',
   `create_by` bigint NOT NULL COMMENT '创建人id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -95,6 +124,10 @@ CREATE TABLE `sys_organization`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '组织架构' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_organization
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_params
@@ -105,8 +138,9 @@ CREATE TABLE `sys_params`  (
   `param_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数名',
   `param_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数键',
   `param_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数值',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
   `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '启用状态 0.禁用 1.启用',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
   `create_by` bigint NOT NULL COMMENT '创建人id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -114,6 +148,10 @@ CREATE TABLE `sys_params`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公共参数' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_params
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_params_biz
@@ -124,8 +162,9 @@ CREATE TABLE `sys_params_biz`  (
   `param_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数名',
   `param_key` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数键',
   `param_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '参数值',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
   `enabled` tinyint(1) NOT NULL DEFAULT 1 COMMENT '启用状态 0.禁用 1.启用',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
   `tenant_id` bigint NOT NULL COMMENT '租户id',
   `create_by` bigint NOT NULL COMMENT '创建人id',
@@ -134,6 +173,10 @@ CREATE TABLE `sys_params_biz`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '业务参数' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_params_biz
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -147,6 +190,7 @@ CREATE TABLE `sys_role`  (
   `data_scope_type` tinyint NOT NULL DEFAULT 2 COMMENT '数据权限类型 1.全部 2.本机及子级 3.本级 4.当前用户 10.自定义',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注描述',
   `organization_id` bigint NOT NULL COMMENT '组织id',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除, 1.已删除',
   `tenant_id` bigint NOT NULL COMMENT '租户id',
   `create_by` bigint NOT NULL COMMENT '创建人id',
@@ -157,14 +201,24 @@ CREATE TABLE `sys_role`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of sys_role
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_role_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_menu`;
 CREATE TABLE `sys_role_menu`  (
+  `id` bigint NOT NULL COMMENT '主键',
   `role_id` bigint NOT NULL COMMENT '角色id',
   `menu_id` bigint NOT NULL COMMENT '菜单id',
-  PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `idx_role_menu_id`(`role_id` ASC, `menu_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色菜单' ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of sys_role_menu
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_tenant
@@ -186,6 +240,7 @@ CREATE TABLE `sys_tenant`  (
   `home_page` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '首页页面',
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '租户简介',
   `extends_info` json NULL COMMENT '扩展信息',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除, 1.已删除',
   `create_by` bigint NOT NULL COMMENT '创建人id',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -195,18 +250,21 @@ CREATE TABLE `sys_tenant`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '租户管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of sys_tenant
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`  (
   `id` bigint NOT NULL COMMENT '主键',
+  `name` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '姓名',
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登录账号',
   `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
-  `salt` varchar(64) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '密码盐',
-  `name` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '姓名',
   `nickname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
   `type` tinyint NOT NULL DEFAULT 2 COMMENT '用户类型 -1.超级管理员 1.租户管理员 2.普通用户',
-  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 -1.锁定 0.禁用 1.可用',
+  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态 -1.锁定 1.可用 2.过期',
   `phone` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '手机号',
   `sex` tinyint NOT NULL COMMENT '性别 -1.未知 0.男 1.女',
   `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '电子邮箱',
@@ -214,6 +272,7 @@ CREATE TABLE `sys_user`  (
   `wx_open_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信openId',
   `mini_open_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '小程序openId',
   `organization_id` bigint NOT NULL COMMENT '组织部门id',
+  `version` int NOT NULL COMMENT '版本号',
   `deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标识 0.未删除 1.已删除',
   `tenant_id` bigint NOT NULL COMMENT '租户id',
   `create_by` bigint NOT NULL COMMENT '创建人id',
@@ -224,13 +283,24 @@ CREATE TABLE `sys_user`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of sys_user
+-- ----------------------------
+INSERT INTO `sys_user` VALUES (1, '超级管理员', 'admin', '$2a$10$WWbwZYyvu2Dag6rt6L3yXeTd.5EBWQrOELPhD0wCCmez6gmwGZIei', '超级管理员', -1, 1, '18511111111', 0, '123456@qq.com', NULL, NULL, NULL, 1, 0, 0, 1, 1, '2024-09-23 12:58:11', 1, '2024-09-23 12:58:20');
+
+-- ----------------------------
 -- Table structure for sys_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
+  `id` bigint NOT NULL COMMENT '主键',
   `user_id` bigint NOT NULL COMMENT '用户id',
   `role_id` bigint NOT NULL COMMENT '角色id',
-  PRIMARY KEY (`user_id`, `role_id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `idx_user_role_id`(`user_id` ASC, `role_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户角色' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

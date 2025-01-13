@@ -55,7 +55,7 @@ CREATE TABLE `oauth_client`  (
 -- ----------------------------
 -- Records of oauth_client
 -- ----------------------------
-INSERT INTO `oauth_client` VALUES (1, '全都是借口啊', 'thinker', 'thinker', 'dGhpbmtlcjp0aGlua2Vy', 1, 'server', 'client_secret_basic', 'password,refresh_token,authorization_code,client_credentials', 'https://isexcuse.com', NULL, NULL, 604800, 604800, 1, 0, NULL, NULL, 'true', NULL, 0, 2, 1, '2024-11-04 14:57:31', 1, '2024-11-04 14:57:35');
+INSERT INTO `oauth_client` VALUES (1, '超级管理员租户', 'thinker', 'thinker', 'dGhpbmtlcjp0aGlua2Vy', 1, 'server', 'client_secret_basic', 'password,refresh_token,authorization_code,client_credentials', 'https://isexcuse.com', NULL, NULL, 604800, 604800, 1, 0, NULL, NULL, 'true', NULL, 0, 2, 1, '2024-11-04 14:57:31', 1, '2024-11-04 14:57:35');
 
 -- ----------------------------
 -- Table structure for oauth_client_social
