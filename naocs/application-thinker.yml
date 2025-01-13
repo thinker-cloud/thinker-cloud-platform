@@ -8,12 +8,16 @@ spring:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB
+  freemarker:
+    suffix: .ftl
+    cache: true
+    prefer-file-system-access: true
       
   # 接入 spring boot admin
   boot:
     admin:
       client:
-        url: http://localhost:8000
+        url: http://localhost:8881
         username: admin
         password: admin
         instance:
@@ -55,6 +59,9 @@ springdoc:
     operations-sorter: alpha
     show-extensions: true
   default-flat-param-object: false
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.thinker.cloud.**.controller
 
 # 监控端点
 management:
@@ -75,3 +82,15 @@ management:
     configprops:
       # 默认Actuator的配置属性会以****显示，这里开启显示
       show-values: always
+
+thinker:
+  cloud:
+    # 安全配置
+    security:
+      inner-check: true
+      ignore-urls:
+        - /doc.html
+        - /v3/api-docs/**
+        - /swagger-ui/**
+        - /swagger-ui.html
+        - /swagger-resources

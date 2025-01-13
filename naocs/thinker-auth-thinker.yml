@@ -1,0 +1,66 @@
+spring:
+  datasource:
+    dynamic:
+      druid:
+        initial-size: 40
+        max-active: 150
+        min-idle: 10
+        max-wait: 60000
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        pool-prepared-statements: true
+        min-evictable-idle-time-millis: 300000
+        time-between-eviction-runs-millis: 60000
+        max-pool-prepared-statement-per-connection-size: 40
+        #validationQuery: SELECT 1 FROM DUAL
+        filters: stat,slf4j
+        connectionProperties:
+          druid:
+            stat:
+              mergeSql: true
+              slowSqlMillis: 5000
+      # 默认的数据源
+      primary: master
+      # 未匹配到数据源时，true抛异常，false使用默认数据源
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://120.77.206.150:13306/thinker-auth?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: root
+          password: 123456!
+        slave:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://120.77.206.150:13306/thinker-auth?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: root
+          password: 123456!
+
+springdoc:
+  api-docs:
+    title: 权限中心
+    description: 权限中心接口文档
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.thinker.cloud.auth.controller
+
+thinker:
+  cloud:
+    db:
+      # 数据库类型
+      type: mysql
+      # 开启租户隔离
+      tenant:
+        enable: true
+      # 开启数据权限
+      data-scope:
+        enable: true
+    redis:
+      # 开启延迟队列
+      delayQueue:
+        enabled: false
+    # 安全配置
+    security:
+      ignore-urls:
+        - /token/**
+

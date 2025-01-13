@@ -1,0 +1,70 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 开启从注册中心动态创建路由的功能
+          enabled: true
+          # 使用小写服务名，默认是大写
+          lower-case-service-id: true
+      # 全局用于配置所有路由共享过滤器
+      default-filters:
+        # 去掉-Path=/simple-demo前缀
+        - StripPrefix=1
+        # 发送原主机头
+        - PreserveHostHeader
+      # 配置路由路径
+      routes:
+        # thinker-upms 服务
+        - id: thinker-upms
+          uri: lb://thinker-upms
+          predicates:
+            - Path=/upms/**
+          filters:
+            # 限流配置
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 200
+                redis-rate-limiter.burstCapacity: 4000
+        # thinker-auth 服务
+        - id: thinker-auth
+          uri: lb://thinker-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            # 限流配置
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@remoteAddrKeyResolver}'
+                redis-rate-limiter.replenishRate: 200
+                redis-rate-limiter.burstCapacity: 4000
+        # thinker-monitor 模块
+        - id: thinker-monitor
+          uri: lb://thinker-monitor
+          predicates:
+            - Path=/thinker-monitor/**
+        # 固定路由转发配置 无修改
+        - id: openapi
+          uri: lb://thinker-gateway
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/$\{path}/v3/api-docs
+
+knife4j:
+  gateway:
+    enabled: true
+    # 网关文档聚合方式：服务发现（自动聚合）
+    strategy: discover
+    discover:
+      # 配置开启服务发现
+      enabled: true
+      # 配置OpenAPI3规范
+      version: openapi3
+      # 排除监控服务
+      excluded-services: thinker-monitor
+    # 配置tag排序规则
+    tags-sorter: order
+    # 配置operation排序规则
+    operations-sorter: order
