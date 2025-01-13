@@ -23,7 +23,7 @@
 - 新克隆
 
 ```shell
-git clone --recursive git@gitee.com:thinker-cloud/thinker-cloud-platform.git
+git clone --recursive git@github.com:thinker-cloud/thinker-cloud-platform.git
 ```
 
 - 非新克隆
