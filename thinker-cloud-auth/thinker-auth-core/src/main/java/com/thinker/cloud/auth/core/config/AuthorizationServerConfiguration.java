@@ -1,5 +1,6 @@
 package com.thinker.cloud.auth.core.config;
 
+import com.thinker.cloud.auth.core.form.FormAuthenticationConfigurer;
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationFailureHandler;
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationSuccessHandler;
 import com.thinker.cloud.auth.core.support.password.PasswordAuthenticationConverter;
@@ -17,7 +18,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
@@ -47,6 +47,7 @@ public class AuthorizationServerConfiguration {
 
     private final PasswordEncoder passwordEncoder;
     private final SecurityProperties securityProperties;
+    private final PermitAllUrlMatcher permitAllUrlMatcher;
     private final BearerTokenExtractor bearerTokenExtractor;
     private final AuthAccessDeniedHandler authAccessDeniedHandler;
     private final UserDetailsServiceFactory userDetailsServiceFactory;
@@ -63,8 +64,10 @@ public class AuthorizationServerConfiguration {
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-        // 授权配置
-        return http.oauth2ResourceServer(oauth2 -> oauth2
+        // 配置授权服务器的安全策略，只有/oauth2/**的请求才会走如下的配置
+        return http.securityMatcher("/oauth2/**")
+                // 授权配置
+                .oauth2ResourceServer(oauth2 -> oauth2
                         .opaqueToken(token -> token.introspector(authorizationServiceIntrospector))
                         // 身份验证入口点
                         .authenticationEntryPoint(authExceptionEntryPoint)
@@ -100,7 +103,8 @@ public class AuthorizationServerConfiguration {
                         .accessDeniedHandler(authAccessDeniedHandler)
                         // 身份验证入口点
                         .authenticationEntryPoint(authExceptionEntryPoint))
-                .csrf(AbstractHttpConfigurer::disable)
+                // 设置授权码模式登录页面
+                .with(new FormAuthenticationConfigurer(permitAllUrlMatcher), Customizer.withDefaults())
                 .build();
     }
 

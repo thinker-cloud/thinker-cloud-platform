@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>com.thinker.cloud</groupId>
 		<artifactId>simples</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>${revision}</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>shard-sphere-demo</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name>shard-sphere-demo</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.thinker.cloud</groupId>
 			<artifactId>thinker-cloud-config</artifactId>
-			<version>${thinker-cloud.version}</version>
+			<version>${revision}</version>
 		</dependency>
 
 		<dependency>
