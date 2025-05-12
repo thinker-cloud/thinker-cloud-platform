@@ -47,12 +47,9 @@ public class AuthorizationServerConfiguration {
 
     private final PasswordEncoder passwordEncoder;
     private final SecurityProperties securityProperties;
-    private final PermitAllUrlMatcher permitAllUrlMatcher;
-    private final BearerTokenExtractor bearerTokenExtractor;
     private final AuthAccessDeniedHandler authAccessDeniedHandler;
     private final UserDetailsServiceFactory userDetailsServiceFactory;
     private final Oauth2AuthExceptionEntryPoint authExceptionEntryPoint;
-    private final AuthorizationServiceIntrospector authorizationServiceIntrospector;
 
     private final OAuth2AuthorizationService authorizationService;
     private final OAuth2TokenEnhanceCustomizer oAuth2TokenEnhanceCustomizer;
@@ -66,12 +63,6 @@ public class AuthorizationServerConfiguration {
 
         // 配置授权服务器的安全策略，只有/oauth2/**的请求才会走如下的配置
         return http.securityMatcher("/oauth2/**")
-                // 授权配置
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .opaqueToken(token -> token.introspector(authorizationServiceIntrospector))
-                        // 身份验证入口点
-                        .authenticationEntryPoint(authExceptionEntryPoint)
-                        .bearerTokenResolver(bearerTokenExtractor))
                 .with(authorizationServerConfigurer
                         // 认证授权端点
                         .tokenEndpoint(tokenEndpoint -> tokenEndpoint
@@ -88,7 +79,7 @@ public class AuthorizationServerConfiguration {
                         // 授权码端点个性化confirm页面
                         .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
                                 .errorResponseHandler(authenticationFailureEvenHandler)
-                                .consentPage("/token/confirm_access")), Customizer.withDefaults())
+                                .consentPage("/oauth2/confirm_access")), Customizer.withDefaults())
                 .with(authorizationServerConfigurer
                         // 客户端认证
                         .clientAuthentication(clientAuthentication -> clientAuthentication
@@ -104,7 +95,7 @@ public class AuthorizationServerConfiguration {
                         // 身份验证入口点
                         .authenticationEntryPoint(authExceptionEntryPoint))
                 // 设置授权码模式登录页面
-                .with(new FormAuthenticationConfigurer(permitAllUrlMatcher), Customizer.withDefaults())
+                .with(new FormAuthenticationConfigurer(), Customizer.withDefaults())
                 .build();
     }
 
