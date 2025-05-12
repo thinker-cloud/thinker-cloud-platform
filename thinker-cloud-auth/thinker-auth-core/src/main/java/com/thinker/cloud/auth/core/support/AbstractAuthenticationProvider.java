@@ -109,7 +109,7 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
             Optional.ofNullable(clientAuth).ifPresent(var -> authorizationBuilder.attribute(CommonConstants.AUTH_TYPE, var));
 
             // ----- Access token -----
-            OAuth2AccessToken accessToken = this.genAccessToken(tokenContextBuilder, authorizationBuilder);
+            OAuth2AccessToken accessToken = this.genAccessToken(tokenContextBuilder, authorizationBuilder, principal);
 
             // ----- Refresh token -----
             OAuth2RefreshToken refreshToken = this.genRefreshToken(tokenContextBuilder, authorizationBuilder, registeredClient);
@@ -153,7 +153,7 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
      * @return OAuth2AccessToken
      */
     private OAuth2AccessToken genAccessToken(DefaultOAuth2TokenContext.Builder tokenContextBuilder
-            , OAuth2Authorization.Builder authorizationBuilder) {
+            , OAuth2Authorization.Builder authorizationBuilder, AbstractAuthenticationToken principal) {
         OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
         OAuth2Token generatedAccessToken = this.tokenGenerator.generate(tokenContext);
         if (generatedAccessToken == null) {
@@ -168,9 +168,10 @@ public abstract class AbstractAuthenticationProvider<T extends AbstractAuthentic
 
         if (generatedAccessToken instanceof ClaimAccessor) {
             authorizationBuilder.token(accessToken, (metadata) ->
-                    metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME
-                            , ((ClaimAccessor) generatedAccessToken).getClaims())
-            );
+                            metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME
+                                    , ((ClaimAccessor) generatedAccessToken).getClaims()))
+                    .authorizedScopes(principal.getScopes())
+                    .attribute(Principal.class.getName(), principal);
         } else {
             authorizationBuilder.accessToken(accessToken);
         }

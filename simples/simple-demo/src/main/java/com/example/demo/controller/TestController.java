@@ -72,7 +72,7 @@ public class TestController {
     @GetMapping(value = "getCache")
     @Operation(summary = "测试接口", description = "测试接口")
     public Result<SuperEntity> getCache(@RequestParam String key) {
-        SuperEntity entity = fastRedisService.getCache(key);
+        SuperEntity entity = fastRedisService.getCacheObj(key);
         return Result.success(entity);
     }
 }

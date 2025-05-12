@@ -35,7 +35,6 @@ import java.util.Set;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/token")
 public class TokenRevokeEndpoint {
 
     private final RedisOauthClientRepository redisOauthClientRepository;
@@ -48,7 +47,7 @@ public class TokenRevokeEndpoint {
      * @param error        表单登录失败处理回调的错误信息
      * @return ModelAndView
      */
-    @GetMapping("/login")
+    @GetMapping("token/login")
     public ModelAndView require(ModelAndView modelAndView, @RequestParam(required = false) String error) {
         modelAndView.setViewName("ftl/login");
         modelAndView.addObject("error", error);
@@ -64,7 +63,7 @@ public class TokenRevokeEndpoint {
      * @param modelAndView modelAndView
      * @return ModelAndView
      */
-    @GetMapping("/confirm_access")
+    @GetMapping("oauth2/confirm_access")
     public ModelAndView confirm(Principal principal, ModelAndView modelAndView,
                                 @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId,
                                 @RequestParam(OAuth2ParameterNames.STATE) String state) {
@@ -87,7 +86,7 @@ public class TokenRevokeEndpoint {
      *
      * @param authHeader Authorization
      */
-    @DeleteMapping("/logout")
+    @DeleteMapping("token/logout")
     public Result<Boolean> logout(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         if (StrUtil.isBlank(authHeader)) {
             return Result.failure("退出失败，token 为空");
@@ -103,7 +102,7 @@ public class TokenRevokeEndpoint {
      * @param token 令牌
      */
     @SneakyThrows
-    @GetMapping("/check_token")
+    @GetMapping("token/check_token")
     public void checkToken(String token, HttpServletRequest request, HttpServletResponse response) {
         oauth2TokenEndpointService.checkToken(token, request, response);
     }
@@ -114,7 +113,7 @@ public class TokenRevokeEndpoint {
      * @param token token
      */
     @Inner
-    @DeleteMapping("/remove/{token}")
+    @DeleteMapping("token/remove/{token}")
     public Result<Boolean> removeToken(@PathVariable("token") String token) {
         oauth2TokenEndpointService.removeToken(token);
         return Result.success();
@@ -127,7 +126,7 @@ public class TokenRevokeEndpoint {
      * @return Result<Page>
      */
     @Inner
-    @PostMapping("/page")
+    @PostMapping("token/page")
     public Result<Page<AccessTokenVO>> tokenPage(@RequestBody Map<String, Object> params) {
         Integer current = MapUtil.getInt(params, "current");
         Integer size = MapUtil.getInt(params, "size");

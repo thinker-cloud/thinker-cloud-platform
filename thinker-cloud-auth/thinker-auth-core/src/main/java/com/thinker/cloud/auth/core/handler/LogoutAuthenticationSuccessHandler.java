@@ -44,7 +44,7 @@ public class LogoutAuthenticationSuccessHandler implements LogoutSuccessHandler 
             String referer = request.getHeader(HttpHeaders.REFERER);
             redirectStrategy.sendRedirect(request, response, referer);
         } else {
-            String result = JSONObject.toJSONString(Result.success(null, "登出成功"));
+            String result = JSONObject.toJSONString(Result.success("登出成功"));
             JakartaServletUtil.write(response, result, CommonConstants.APPLICATION_JSON_UTF8);
         }
     }

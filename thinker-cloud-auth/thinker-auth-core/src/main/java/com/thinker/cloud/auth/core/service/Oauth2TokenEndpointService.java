@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinker.cloud.auth.api.model.vo.AccessTokenVO;
 import com.thinker.cloud.auth.core.handler.Oauth2AuthenticationFailureHandler;
-import com.thinker.cloud.common.resolver.KeyStrResolver;
 import com.thinker.cloud.common.utils.ListUtil;
 import com.thinker.cloud.core.utils.spring.SpringContextHolder;
 import com.thinker.cloud.security.constants.OAuth2ErrorCodesExpand;
@@ -51,7 +50,6 @@ public class Oauth2TokenEndpointService {
 
     private final ObjectMapper objectMapper;
     private final CacheManager cacheManager;
-    private final KeyStrResolver keyStrResolver;
     private final RedisTemplate<String, Object> redisTemplate;
     private final OAuth2AuthorizationService authorizationService;
     private final Oauth2AuthenticationFailureHandler authenticationFailureHandler;
